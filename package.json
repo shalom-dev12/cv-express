@@ -1,0 +1,16 @@
+{
+  "name": "cv-express",
+  "version": "1.0.0",
+  "description": "CV Express - générateur de CV gratuit, Android",
+  "scripts": {
+    "sync": "npx cap sync android"
+  },
+  "dependencies": {
+    "@capacitor/android": "^6.1.2",
+    "@capacitor/core": "^6.1.2",
+    "@capacitor-community/admob": "^6.1.0"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^6.1.2"
+  }
+}

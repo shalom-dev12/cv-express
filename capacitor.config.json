@@ -1,0 +1,13 @@
+{
+  "appId": "com.techshalom.cvexpress",
+  "appName": "CV Express",
+  "webDir": "www",
+  "bundledWebRuntime": false,
+  "plugins": {
+    "AdMob": {
+      "appId": {
+        "android": "ca-app-pub-4323566518250268~9172490383"
+      }
+    }
+  }
+}

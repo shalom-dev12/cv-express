@@ -1,0 +1,53 @@
+name: Construire l'APK Android
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Récupérer le code
+        uses: actions/checkout@v4
+
+      - name: Installer Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Installer Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Installer les dépendances
+        run: npm install
+
+      - name: Ajouter la plateforme Android (si absente)
+        run: |
+          if [ ! -d "android" ]; then
+            npx cap add android
+          fi
+
+      - name: Synchroniser Capacitor
+        run: npx cap sync android
+
+      - name: Ajouter l'App ID AdMob dans AndroidManifest.xml (si absent)
+        run: |
+          MANIFEST="android/app/src/main/AndroidManifest.xml"
+          if ! grep -q "com.google.android.gms.ads.APPLICATION_ID" "$MANIFEST"; then
+            sed -i 's#</application>#    <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="ca-app-pub-4323566518250268~9172490383"/>\n    </application>#' "$MANIFEST"
+          fi
+
+      - name: Construire l'APK (debug)
+        working-directory: ./android
+        run: chmod +x gradlew && ./gradlew assembleDebug
+
+      - name: Mettre l'APK à disposition en téléchargement
+        uses: actions/upload-artifact@v4
+        with:
+          name: cv-express-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
