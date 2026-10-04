@@ -3,7 +3,7 @@
 // il ne s'active que dans l'application Android packagée.
 
 (function () {
-  const IDENTIFIANT_BLOC_RECOMPENSE = "ca-app-pub-4323566518250268/3701681010";
+  const IDENTIFIANT_BLOC_RECOMPENSE = "ca-app-pub-3940256099942544/5224354917";
 
   if (!window.Capacitor || !window.Capacitor.Plugins || !window.Capacitor.Plugins.AdMob) {
     // Pas dans l'app Android (ex: test dans Chrome) → on ne fait rien,
@@ -21,7 +21,7 @@
     try {
       await AdMob.initialize({
         requestTrackingAuthorization: true,
-        initializeForTesting: false
+        initializeForTesting: true
       });
       await chargerPub();
     } catch (erreur) {
