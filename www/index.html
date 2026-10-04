@@ -1002,53 +1002,108 @@ document.getElementById("boutonTelecharger").addEventListener("click", () => {
   // Génère et télécharge le PDF — appelé seulement APRÈS que la pub
   // récompensée soit terminée (callback "récompense obtenue").
   function genererEtTelechargerPdf() {
-    const profil = profils.find(p => p.id === idProfilEnApercu);
-    const nomFichier = (profil.donnees.nom || "mon-cv").trim().replace(/\s+/g, "-").toLowerCase() + ".pdf";
-    const element = document.getElementById("cvGrand");
+    dejaTraite = true;
 
-    const options = {
-      margin: 0,
-      filename: nomFichier,
-      image: { type: "jpeg", quality: 0.98 },
-      html2canvas: { scale: 2, useCORS: true },
-      jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
-    };
+    // Filet de sécurité : si la génération du PDF reste bloquée plus de
+    // 20 secondes après la fin de la pub, on débloque quand même le bouton
+    // au lieu de rester sur "Chargement..." indéfiniment.
+    let pdfTermine = false;
+    setTimeout(() => {
+      if (!pdfTermine) {
+        pdfTermine = true;
+        bouton.disabled = false;
+        bouton.textContent = "Télécharger";
+        message.style.background = "#fdecea";
+        message.style.color = "#7a2a20";
+        message.textContent = "Erreur : la génération du PDF a pris trop de temps, réessaie.";
+        message.style.display = "block";
+      }
+    }, 20000);
 
-    html2pdf().set(options).from(element).toPdf().get("pdf").then((pdf) => {
-      const blobPdf = pdf.output("blob");
-      const urlPdf = URL.createObjectURL(blobPdf);
-
-      const lienAuto = document.createElement("a");
-      lienAuto.href = urlPdf;
-      lienAuto.download = nomFichier;
-      document.body.appendChild(lienAuto);
-      lienAuto.click();
-      document.body.removeChild(lienAuto);
-
-      bouton.disabled = false;
-      bouton.textContent = "Télécharger";
-      message.innerHTML = `PDF prêt ✓ — si le téléchargement ne s'est pas lancé seul, <a href="${urlPdf}" target="_blank" style="color:#0a7a3d;font-weight:700;text-decoration:underline;">clique ici pour l'ouvrir</a>`;
-      message.style.display = "block";
-    }).catch((erreur) => {
+    // Vérifie que html2pdf (chargé depuis internet) a bien pu se charger.
+    // Sans cette vérification, si le script ne charge pas (pas de réseau,
+    // chargement lent...), l'app restait bloquée sur "Chargement..." sans
+    // jamais signaler d'erreur.
+    if (typeof html2pdf === "undefined") {
       bouton.disabled = false;
       bouton.textContent = "Télécharger";
       message.style.background = "#fdecea";
       message.style.color = "#7a2a20";
-      message.textContent = "Le téléchargement a échoué, réessaie.";
+      message.textContent = "Erreur : impossible de charger l'outil PDF (vérifie ta connexion internet) et réessaie.";
       message.style.display = "block";
-      console.error(erreur);
-    });
+      return;
+    }
+
+    try {
+      const profil = profils.find(p => p.id === idProfilEnApercu);
+      const nomFichier = (profil.donnees.nom || "mon-cv").trim().replace(/\s+/g, "-").toLowerCase() + ".pdf";
+      const element = document.getElementById("cvGrand");
+
+      const options = {
+        margin: 0,
+        filename: nomFichier,
+        image: { type: "jpeg", quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
+      };
+
+      html2pdf().set(options).from(element).toPdf().get("pdf").then((pdf) => {
+        if (pdfTermine) return;
+        pdfTermine = true;
+        const blobPdf = pdf.output("blob");
+        const urlPdf = URL.createObjectURL(blobPdf);
+
+        const lienAuto = document.createElement("a");
+        lienAuto.href = urlPdf;
+        lienAuto.download = nomFichier;
+        document.body.appendChild(lienAuto);
+        lienAuto.click();
+        document.body.removeChild(lienAuto);
+
+        bouton.disabled = false;
+        bouton.textContent = "Télécharger";
+        message.innerHTML = `PDF prêt ✓ — si le téléchargement ne s'est pas lancé seul, <a href="${urlPdf}" target="_blank" style="color:#0a7a3d;font-weight:700;text-decoration:underline;">clique ici pour l'ouvrir</a>`;
+        message.style.display = "block";
+      }).catch((erreur) => {
+        if (pdfTermine) return;
+        pdfTermine = true;
+        bouton.disabled = false;
+        bouton.textContent = "Télécharger";
+        message.style.background = "#fdecea";
+        message.style.color = "#7a2a20";
+        message.textContent = "Erreur PDF : " + (erreur && erreur.message ? erreur.message : erreur);
+        message.style.display = "block";
+        console.error(erreur);
+      });
+    } catch (erreurSynchrone) {
+      pdfTermine = true;
+      bouton.disabled = false;
+      bouton.textContent = "Télécharger";
+      message.style.background = "#fdecea";
+      message.style.color = "#7a2a20";
+      message.textContent = "Erreur PDF : " + (erreurSynchrone && erreurSynchrone.message ? erreurSynchrone.message : erreurSynchrone);
+      message.style.display = "block";
+      console.error(erreurSynchrone);
+    }
   }
 
+  let dejaTraite = false;
+
   function echecPub(raison) {
+    if (dejaTraite) return;
+    dejaTraite = true;
     bouton.disabled = false;
     bouton.textContent = "Télécharger";
     message.style.background = "#fdecea";
     message.style.color = "#7a2a20";
-    message.textContent = "La pub n'a pas pu se charger, réessaie dans quelques instants.";
+    // Affiche le détail exact de l'erreur à l'écran (pour debug sans ordinateur)
+    const detail = (raison && raison.message) ? raison.message : (typeof raison === "string" ? raison : JSON.stringify(raison));
+    message.textContent = "Erreur pub : " + detail;
     message.style.display = "block";
     console.error("Pub récompensée non obtenue :", raison);
   }
+
+
 
   // Dans l'app Android (Capacitor + plugin AdMob) : window.admobAfficherPubRecompensee
   // est défini dans index.js et lance la vraie pub récompensée AdMob.
