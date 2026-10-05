@@ -1001,6 +1001,56 @@ document.getElementById("boutonTelecharger").addEventListener("click", () => {
 
   // Génère et télécharge le PDF — appelé seulement APRÈS que la pub
   // récompensée soit terminée (callback "récompense obtenue").
+  // Enregistre le PDF puis propose de l'ouvrir/partager — utilise les
+  // vraies fonctions Android (Filesystem + Share) quand disponibles,
+  // sinon retombe sur le téléchargement classique du navigateur (pour
+  // les tests dans Chrome).
+  async function sauvegarderEtOuvrirPdf(blobPdf, nomFichier) {
+    const Capacitor = window.Capacitor;
+    const Filesystem = Capacitor && Capacitor.Plugins && Capacitor.Plugins.Filesystem;
+    const Share = Capacitor && Capacitor.Plugins && Capacitor.Plugins.Share;
+
+    if (Filesystem) {
+      const base64Data = await new Promise((resolve, reject) => {
+        const lecteur = new FileReader();
+        lecteur.onloadend = () => resolve(lecteur.result.split(",")[1]);
+        lecteur.onerror = reject;
+        lecteur.readAsDataURL(blobPdf);
+      });
+
+      const resultatEcriture = await Filesystem.writeFile({
+        path: nomFichier,
+        data: base64Data,
+        directory: "DOCUMENTS",
+        recursive: true
+      });
+
+      if (Share && resultatEcriture && resultatEcriture.uri) {
+        try {
+          await Share.share({
+            title: nomFichier,
+            url: resultatEcriture.uri,
+            dialogTitle: "Ouvrir ou enregistrer ton CV"
+          });
+        } catch (erreurPartage) {
+          // L'utilisateur a peut-être juste fermé le menu de partage,
+          // ce n'est pas une vraie erreur — le fichier est déjà enregistré.
+          console.log("Partage annulé ou indisponible :", erreurPartage);
+        }
+      }
+      return;
+    }
+
+    // Secours pour test dans un navigateur classique (pas dans l'app Android)
+    const urlPdf = URL.createObjectURL(blobPdf);
+    const lienAuto = document.createElement("a");
+    lienAuto.href = urlPdf;
+    lienAuto.download = nomFichier;
+    document.body.appendChild(lienAuto);
+    lienAuto.click();
+    document.body.removeChild(lienAuto);
+  }
+
   function genererEtTelechargerPdf() {
     dejaTraite = true;
 
@@ -1049,23 +1099,28 @@ document.getElementById("boutonTelecharger").addEventListener("click", () => {
         jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
       };
 
-      html2pdf().set(options).from(element).toPdf().get("pdf").then((pdf) => {
+      html2pdf().set(options).from(element).toPdf().get("pdf").then(async (pdf) => {
         if (pdfTermine) return;
         pdfTermine = true;
         const blobPdf = pdf.output("blob");
-        const urlPdf = URL.createObjectURL(blobPdf);
 
-        const lienAuto = document.createElement("a");
-        lienAuto.href = urlPdf;
-        lienAuto.download = nomFichier;
-        document.body.appendChild(lienAuto);
-        lienAuto.click();
-        document.body.removeChild(lienAuto);
-
-        bouton.disabled = false;
-        bouton.textContent = "Télécharger";
-        message.innerHTML = `PDF prêt ✓ — si le téléchargement ne s'est pas lancé seul, <a href="${urlPdf}" target="_blank" style="color:#0a7a3d;font-weight:700;text-decoration:underline;">clique ici pour l'ouvrir</a>`;
-        message.style.display = "block";
+        try {
+          await sauvegarderEtOuvrirPdf(blobPdf, nomFichier);
+          bouton.disabled = false;
+          bouton.textContent = "Télécharger";
+          message.style.background = "#e6f6ec";
+          message.style.color = "#0a7a3d";
+          message.textContent = "PDF prêt ✓";
+          message.style.display = "block";
+        } catch (erreurSauvegarde) {
+          bouton.disabled = false;
+          bouton.textContent = "Télécharger";
+          message.style.background = "#fdecea";
+          message.style.color = "#7a2a20";
+          message.textContent = "Erreur enregistrement : " + (erreurSauvegarde && erreurSauvegarde.message ? erreurSauvegarde.message : erreurSauvegarde);
+          message.style.display = "block";
+          console.error(erreurSauvegarde);
+        }
       }).catch((erreur) => {
         if (pdfTermine) return;
         pdfTermine = true;
