@@ -1034,6 +1034,8 @@ document.getElementById("boutonTelecharger").addEventListener("click", () => {
       return;
     }
 
+    bouton.textContent = "Création du PDF...";
+
     try {
       const profil = profils.find(p => p.id === idProfilEnApercu);
       const nomFichier = (profil.donnees.nom || "mon-cv").trim().replace(/\s+/g, "-").toLowerCase() + ".pdf";
@@ -1043,7 +1045,7 @@ document.getElementById("boutonTelecharger").addEventListener("click", () => {
         margin: 0,
         filename: nomFichier,
         image: { type: "jpeg", quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true },
+        html2canvas: { scale: 1, useCORS: true, logging: false },
         jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
       };
 
