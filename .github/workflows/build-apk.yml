@@ -33,7 +33,7 @@ jobs:
           fi
 
       - name: Generer icone et ecran de demarrage
-        run: npx capacitor-assets generate --android
+        run: npx @capacitor/assets generate --android
 
       - name: Synchroniser Capacitor
         run: npx cap sync android
