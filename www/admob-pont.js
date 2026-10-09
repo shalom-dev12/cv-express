@@ -7,7 +7,7 @@
   // qui fonctionne toujours. Sert uniquement à vérifier que l'intégration
   // technique fonctionne, pendant que le vrai compte AdMob "chauffe".
   // Une fois confirmé, remettre : "ca-app-pub-4323566518250268/3701681010"
-  const IDENTIFIANT_BLOC_RECOMPENSE = "ca-app-pub-4323566518250268/3701681010";
+  const IDENTIFIANT_BLOC_RECOMPENSE = "ca-app-pub-3940256099942544/5224354917";
 
   if (!window.Capacitor || !window.Capacitor.Plugins || !window.Capacitor.Plugins.AdMob) {
     // Pas dans l'app Android (ex: test dans Chrome) → on ne fait rien,
@@ -25,7 +25,7 @@
     try {
       await AdMob.initialize({
         requestTrackingAuthorization: true,
-        initializeForTesting: false
+        initializeForTesting: true // ⚠️ mode test — remettre à false avant publication finale
       });
       await chargerPub();
     } catch (erreur) {
@@ -51,7 +51,7 @@
         // La pub n'était pas encore prête → on tente un chargement à la volée
         await chargerPub();
         if (!pubPrete) {
-          surEchec("pub non prête");
+          surEchec((typeof L !== "undefined" && L.detail_pub_non_prete) ? L.detail_pub_non_prete : "pub non prête");
           return;
         }
       }

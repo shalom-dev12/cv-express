@@ -1,6 +1,6 @@
 {
-  "appId": "com.techshalom.cvexpress",
-  "appName": "CV Express",
+  "appId": "com.techshalom.nextcv",
+  "appName": "NextCV",
   "webDir": "www",
   "bundledWebRuntime": false,
   "plugins": {

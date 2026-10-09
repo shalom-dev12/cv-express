@@ -2,21 +2,36 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>CV Express</title>
+<title>NextCV</title>
 <style>
   :root {
-    --accent: #D4537E;
-    --accent-dark: #72243E;
+    --accent: #1A1A1A;
+    --accent-dark: #000000;
     --text-dark: #262626;
     --text-muted: #6b6b6b;
     --bg: #ffffff;
     --line: #e6e6e6;
+    --page-bg: #f4f4f2;
+    --accent-app: #1A1A1A;
+    --accent-app-dark: #000000;
   }
+  html[data-theme="sombre"] {
+    --text-dark: #f0f0f0;
+    --text-muted: #a8a8a8;
+    --bg: #2a2a2a;
+    --line: #3d3d3d;
+    --page-bg: #121212;
+    --accent-app: #ECECEC;
+    --accent-app-dark: #ffffff;
+  }
+  html[data-theme="sombre"] .bouton-suivant, html[data-theme="sombre"] .bouton-telecharger,
+  html[data-theme="sombre"] .bouton-voir, html[data-theme="sombre"] .bouton-plus,
+  html[data-theme="sombre"] .onglet.actif { color: #111; }
   * { box-sizing: border-box; }
   body {
     margin: 0;
     font-family: 'Poppins', 'Segoe UI', sans-serif;
-    background: #f4f4f2;
+    background: var(--page-bg);
     color: var(--text-dark);
     display: flex;
     flex-direction: column;
@@ -36,15 +51,25 @@
   .actions-coin { position: absolute; top: 12px; right: 12px; display: flex; gap: 6px; }
   .bouton-icone { border: none; background: var(--line); border-radius: 8px; width: 30px; height: 30px; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
   .bouton-icone.danger { color: #c0392b; }
-  .avatar { width: 60px; height: 60px; border-radius: 50%; background: color-mix(in srgb, var(--accent) 18%, white); margin: 4px auto 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 700; color: var(--accent-dark); overflow: hidden; }
+  .avatar { width: 60px; height: 60px; border-radius: 50%; background: color-mix(in srgb, var(--accent-app) 18%, white); margin: 4px auto 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 700; color: var(--accent-app-dark); overflow: hidden; }
   .avatar img { width: 100%; height: 100%; object-fit: cover; }
   .nom-profil { font-size: 15px; font-weight: 600; margin: 0 0 4px; }
   .date-profil { font-size: 12px; color: var(--text-muted); margin: 0 0 14px; }
   .ligne-boutons { display: flex; gap: 10px; }
   .bouton-action { flex: 1; padding: 10px; border-radius: 8px; border: none; font-size: 13px; font-weight: 600; font-family: inherit; cursor: pointer; }
   .bouton-modifier { background: var(--line); color: var(--text-dark); }
-  .bouton-voir { background: var(--accent); color: #fff; }
+  .bouton-voir { background: var(--accent-app); color: #fff; }
   .carte-vide { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 13.5px; }
+  .ligne-actions-accueil { display: flex; gap: 12px; margin: 16px 0 22px; }
+  .bouton-action-accueil { flex: 1; background: var(--bg); border: none; border-radius: 14px; padding: 16px 8px; box-shadow: 0 4px 14px rgba(0,0,0,0.06); display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; font-family: inherit; }
+  .bouton-action-accueil svg { width: 24px; height: 24px; stroke: var(--accent-app); }
+  .bouton-action-accueil span { font-size: 12.5px; color: var(--text-dark); font-weight: 600; }
+  .ligne-reglages { display: flex; align-items: center; justify-content: space-between; padding: 16px 4px; border-bottom: 1px solid var(--line); cursor: pointer; }
+  .ligne-reglages:last-child { border-bottom: none; }
+  .ligne-reglages span.libelle { font-size: 14.5px; font-weight: 600; }
+  .ligne-reglages span.fleche { color: var(--text-muted); }
+  .ligne-reglages.danger span.libelle { color: #C0392B; }
+  .a-propos-version { text-align: center; color: var(--text-muted); font-size: 12.5px; margin-top: 18px; }
   .confirmation-suppression { margin-top: 14px; padding: 12px; background: #fdecea; border-radius: 8px; font-size: 12.5px; color: #7a2a20; }
   .confirmation-suppression p { margin: 0 0 10px; }
   .confirmation-boutons { display: flex; gap: 8px; }
@@ -57,7 +82,7 @@
   .progression { margin-bottom: 16px; }
   .progression .texte { font-size: 12.5px; color: var(--text-muted); margin-bottom: 6px; display: flex; justify-content: space-between; }
   .progression .barre-fond { height: 6px; background: var(--line); border-radius: 4px; overflow: hidden; }
-  .progression .barre-remplie { height: 100%; background: var(--accent); border-radius: 4px; transition: width 0.25s ease; }
+  .progression .barre-remplie { height: 100%; background: var(--accent-app); border-radius: 4px; transition: width 0.25s ease; }
 
   .formulaire { background: var(--bg); border-radius: 14px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 18px rgba(0,0,0,0.06); }
   .formulaire h2 { font-size: 15px; margin: 0 0 4px; }
@@ -67,27 +92,27 @@
   .champ label { display: block; font-size: 12.5px; font-weight: 600; color: var(--text-muted); margin-bottom: 5px; }
   .champ input, .champ textarea { width: 100%; padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px; font-size: 14px; font-family: inherit; }
   .champ textarea { min-height: 80px; resize: vertical; line-height: 1.5; }
-  .champ input:focus, .champ textarea:focus { outline: none; border-color: var(--accent); }
+  .champ input:focus, .champ textarea:focus { outline: none; border-color: var(--accent-app); }
   .erreur { font-size: 12px; color: #c0392b; margin: -8px 0 10px; display: none; }
   .bloc-repetable { border: 1px solid var(--line); border-radius: 10px; padding: 14px; margin-bottom: 14px; }
   .bloc-repetable .entete-bloc { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
   .bloc-repetable .entete-bloc span { font-size: 12.5px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; }
   .bouton-supprimer { border: none; background: none; color: #c0392b; font-size: 12.5px; cursor: pointer; padding: 2px 6px; }
-  .bouton-ajouter { width: 100%; padding: 10px; border: 1.5px dashed var(--accent); border-radius: 8px; background: none; color: var(--accent-dark); font-size: 13.5px; font-weight: 600; font-family: inherit; cursor: pointer; margin-bottom: 6px; }
+  .bouton-ajouter { width: 100%; padding: 10px; border: 1.5px dashed var(--accent-app); border-radius: 8px; background: none; color: var(--accent-app-dark); font-size: 13.5px; font-weight: 600; font-family: inherit; cursor: pointer; margin-bottom: 6px; }
   .label-suggestions { font-size: 12.5px; font-weight: 600; color: var(--text-muted); margin: 0 0 8px; }
   .liste-suggestions { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
   .suggestion { text-align: left; padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px; background: none; font-family: inherit; font-size: 12.5px; line-height: 1.4; color: var(--text-dark); cursor: pointer; }
   .suggestion .etiquette { display: block; font-size: 11px; font-weight: 600; color: var(--accent-dark); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 4px; }
   .zone-saisie { display: flex; gap: 8px; margin-bottom: 14px; }
   .zone-saisie input { flex: 1; }
-  .bouton-plus { width: 42px; border: none; border-radius: 8px; background: var(--accent); color: #fff; font-size: 20px; font-weight: 600; cursor: pointer; }
+  .bouton-plus { width: 42px; border: none; border-radius: 8px; background: var(--accent-app); color: #fff; font-size: 20px; font-weight: 600; cursor: pointer; }
   .tags-formulaire { display: flex; flex-wrap: wrap; gap: 8px; min-height: 20px; }
-  .tag-formulaire { display: flex; align-items: center; gap: 6px; font-size: 13px; padding: 6px 8px 6px 12px; border-radius: 20px; background: color-mix(in srgb, var(--accent) 14%, white); color: var(--accent-dark); }
+  .tag-formulaire { display: flex; align-items: center; gap: 6px; font-size: 13px; padding: 6px 8px 6px 12px; border-radius: 20px; background: color-mix(in srgb, var(--accent-app) 14%, white); color: var(--accent-app-dark); }
   .tag-formulaire button { border: none; background: none; color: var(--accent-dark); font-size: 13px; cursor: pointer; line-height: 1; padding: 2px; }
   .navigation { display: flex; gap: 10px; margin-top: 18px; }
   .bouton-precedent, .bouton-suivant { flex: 1; padding: 12px; border-radius: 8px; font-size: 14px; font-weight: 600; font-family: inherit; cursor: pointer; border: none; }
   .bouton-precedent { background: var(--line); color: var(--text-dark); }
-  .bouton-suivant { background: var(--accent); color: #fff; }
+  .bouton-suivant { background: var(--accent-app); color: #fff; }
 
   .cv { width: 100%; background: var(--bg); border-radius: 14px; overflow: hidden; box-shadow: 0 4px 18px rgba(0,0,0,0.08); }
   .banniere { background: var(--accent); color: #fff; padding: 28px 24px 24px; display: flex; align-items: center; gap: 16px; }
@@ -114,7 +139,7 @@
   /* ---- Écran Modèles ---- */
   .onglets { display: flex; gap: 8px; margin-bottom: 16px; overflow-x: auto; }
   .onglet { padding: 8px 16px; border-radius: 20px; border: 1px solid var(--line); background: var(--bg); font-size: 13px; font-weight: 600; color: var(--text-muted); cursor: pointer; white-space: nowrap; font-family: inherit; }
-  .onglet.actif { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .onglet.actif { background: var(--accent-app); border-color: var(--accent-app); color: #fff; }
   .grille-modeles { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px; }
   .carte-modele { background: var(--bg); border-radius: 10px; overflow: hidden; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,0.07); }
   .fenetre-miniature { width: 100%; height: 170px; overflow: hidden; position: relative; background: #fff; }
@@ -126,7 +151,7 @@
   .bloc-couleur label { font-size: 13px; font-weight: 600; }
   .bloc-couleur input[type="color"] { width: 36px; height: 36px; border: none; border-radius: 8px; cursor: pointer; }
   .bloc-couleur .note { font-size: 12px; color: var(--text-muted); }
-  .bouton-telecharger { width: 100%; margin-top: 18px; padding: 13px; border: none; border-radius: 10px; background: var(--accent); color: #fff; font-size: 14.5px; font-weight: 700; font-family: inherit; cursor: pointer; }
+  .bouton-telecharger { width: 100%; margin-top: 18px; padding: 13px; border: none; border-radius: 10px; background: var(--accent-app); color: #fff; font-size: 14.5px; font-weight: 700; font-family: inherit; cursor: pointer; }
 
   .cv-sobre { padding: 26px 24px; font-family: Georgia, 'Times New Roman', serif; color: #1a1a1a; }
   .entete-sobre { text-align: center; border-bottom: 2px solid #1a1a1a; padding-bottom: 12px; margin-bottom: 16px; }
@@ -360,7 +385,7 @@
   .interrupteur input { opacity: 0; width: 0; height: 0; }
   .glissiere { position: absolute; cursor: pointer; inset: 0; background: var(--line); border-radius: 24px; transition: 0.2s; }
   .glissiere::before { content: ""; position: absolute; width: 18px; height: 18px; left: 3px; top: 3px; background: white; border-radius: 50%; transition: 0.2s; }
-  .interrupteur input:checked + .glissiere { background: var(--accent); }
+  .interrupteur input:checked + .glissiere { background: var(--accent-app); }
   .interrupteur input:checked + .glissiere::before { transform: translateX(18px); }
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -372,10 +397,74 @@
 
   <!-- ============ ÉCRAN PROFILS ============ -->
   <div class="ecran visible" id="ecranProfils">
-    <h1>Mes profils</h1>
-    <p class="sous-titre">Retrouve et gère tous tes CV enregistrés.</p>
+    <h1 id="titreProfils">Mes profils</h1>
+    <p class="sous-titre" id="sousTitreProfils">Retrouve et gère tous tes CV enregistrés.</p>
+    <div class="ligne-actions-accueil">
+      <button type="button" class="bouton-action-accueil" id="boutonPartagerApp">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+        <span id="labelPartagerApp">Partager</span>
+      </button>
+      <button type="button" class="bouton-action-accueil" id="boutonOuvrirReglages">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span id="labelOuvrirReglages">Réglages</span>
+      </button>
+    </div>
     <p id="messageInfo"></p>
     <div id="listeProfils"></div>
+  </div>
+
+  <!-- ============ ÉCRAN RÉGLAGES ============ -->
+  <div class="ecran" id="ecranReglages">
+    <div class="barre-retour"><button type="button" class="bouton-retour" id="boutonRetourDepuisReglages">← Profils</button></div>
+    <h1 id="titreReglages">Réglages</h1>
+    <div class="bloc" style="padding:4px 18px;">
+      <div class="ligne-reglages">
+        <span class="libelle" id="labelModeSombre">Mode sombre</span>
+        <label class="interrupteur"><input type="checkbox" id="caseModeSombre"><span class="glissiere"></span></label>
+      </div>
+      <div class="ligne-reglages" id="ligneLangue">
+        <span class="libelle" id="labelLangue">Langue de l'application</span>
+        <span class="fleche" id="langueActuelleAffichee">→</span>
+      </div>
+      <div id="zoneSelecteurLangue"></div>
+      <div class="ligne-reglages" id="ligneTaillePapier">
+        <span class="libelle" id="labelTaillePapier">Taille de papier</span>
+        <span class="fleche" id="papierActuelAffiche">→</span>
+      </div>
+      <div id="zoneSelecteurPapier"></div>
+      <div class="ligne-reglages" id="ligneNousContacter">
+        <span class="libelle" id="labelContacter">Nous contacter</span>
+        <span class="fleche">→</span>
+      </div>
+      <div class="ligne-reglages" id="lignePolitique">
+        <span class="libelle" id="labelPolitique">Politique de confidentialité</span>
+        <span class="fleche">→</span>
+      </div>
+      <div class="ligne-reglages" id="ligneConditions">
+        <span class="libelle" id="labelConditions">Conditions d'utilisation</span>
+        <span class="fleche">→</span>
+      </div>
+      <div class="ligne-reglages danger" id="ligneViderDonnees">
+        <span class="libelle" id="labelVider">Vider toutes mes données</span>
+        <span class="fleche">→</span>
+      </div>
+    </div>
+    <div id="zoneConfirmationVidage"></div>
+    <p class="a-propos-version" id="texteVersion">NextCV — version 1.0.0</p>
+  </div>
+
+  <!-- ============ ÉCRAN POLITIQUE DE CONFIDENTIALITÉ ============ -->
+  <div class="ecran" id="ecranPolitique">
+    <div class="barre-retour"><button type="button" class="bouton-retour" id="boutonRetourDepuisPolitique">← Réglages</button></div>
+    <h1 id="titrePolitique">Politique de confidentialité</h1>
+    <p class="sous-titre" id="textePolitique" style="line-height:1.7;"></p>
+  </div>
+
+  <!-- ============ ÉCRAN CONDITIONS D'UTILISATION ============ -->
+  <div class="ecran" id="ecranConditions">
+    <div class="barre-retour"><button type="button" class="bouton-retour" id="boutonRetourDepuisConditions">← Réglages</button></div>
+    <h1 id="titreConditions">Conditions d'utilisation</h1>
+    <p class="sous-titre" id="texteConditions" style="line-height:1.7;"></p>
   </div>
 
   <!-- ============ ÉCRAN FORMULAIRE ============ -->
@@ -390,19 +479,19 @@
 
   <!-- ============ ÉCRAN GÉRER MES SECTIONS ============ -->
   <div class="ecran" id="ecranGererSections">
-    <h1>Gérer mes sections</h1>
-    <p class="sous-titre">Choisis les sections à inclure, et leur ordre.</p>
+    <h1 id="titreGererSections">Gérer mes sections</h1>
+    <p class="sous-titre" id="sousTitreGererSections">Choisis les sections à inclure, et leur ordre.</p>
     <div class="bloc">
-      <h2 style="font-size:15px;margin:0 0 4px;">Mes sections actives</h2>
-      <p class="rappel-facultatif">Glisse-dépose pour réordonner.</p>
+      <h2 style="font-size:15px;margin:0 0 4px;" id="titreSectionsActives">Mes sections actives</h2>
+      <p class="rappel-facultatif" id="texteGlisserDeposer">Glisse-dépose pour réordonner.</p>
       <div id="listeActivesSections"></div>
     </div>
     <div class="bloc">
-      <h2 style="font-size:15px;margin:0 0 4px;">Ajouter des sections</h2>
+      <h2 style="font-size:15px;margin:0 0 4px;" id="titreAjouterSections">Ajouter des sections</h2>
       <div id="listeOptionnellesSections"></div>
     </div>
     <div class="bloc">
-      <h2 style="font-size:15px;margin:0 0 4px;">Créer ma propre section</h2>
+      <h2 style="font-size:15px;margin:0 0 4px;" id="titreCreerSection">Créer ma propre section</h2>
       <div class="champ"><input type="text" id="champNouvelleSection" placeholder="Ex : Permis de conduire..."></div>
       <button type="button" class="bouton-ajouter" id="boutonCreerSection" style="margin-bottom:0;">+ Créer la section</button>
     </div>
@@ -412,7 +501,7 @@
   <!-- ============ ÉCRAN MODÈLES ============ -->
   <div class="ecran" id="ecranModelesGalerie">
     <div class="barre-retour"><button type="button" class="bouton-retour" id="boutonRetourDepuisGalerie">← Profils</button></div>
-    <h1>Choisis ton modèle</h1>
+    <h1 id="titreModeles">Choisis ton modèle</h1>
     <div class="onglets" id="onglets"></div>
     <div class="grille-modeles" id="grilleModeles"></div>
   </div>
@@ -420,9 +509,9 @@
   <div class="ecran" id="ecranModeleDetail">
     <div class="barre-retour"><button type="button" class="bouton-retour" id="boutonRetourVersGalerie">← Modèles</button></div>
     <div class="bloc-couleur" id="blocCouleur">
-      <label for="pickerCouleur">Couleur :</label>
-      <input type="color" id="pickerCouleur" value="#D4537E">
-      <span class="note">Change la couleur en direct</span>
+      <label for="pickerCouleur" id="labelCouleur">Couleur :</label>
+      <input type="color" id="pickerCouleur" value="#222222">
+      <span class="note" id="noteCouleur">Change la couleur en direct</span>
     </div>
     <div class="cv" id="cvGrand"></div>
     <button type="button" class="bouton-telecharger" id="boutonTelecharger">Télécharger</button>
@@ -431,9 +520,161 @@
 
 </div>
 
-<button type="button" class="bouton-flottant" id="boutonCreer">+ Créer un nouveau profil</button>
+<button type="button" class="bouton-flottant" id="boutonCreer">+ <span id="labelCreerProfil">Créer un nouveau profil</span></button>
 
 <script>
+// ============================================
+// Système de traduction (fr / en / es / zh)
+// Les contenus longs pré-écrits (suggestions d'objectif,
+// modèles de lettre de motivation, déclaration) restent en
+// français pour l'instant quelle que soit la langue choisie.
+// ============================================
+const TRADUCTIONS = {
+  fr: {
+    profils_titre: "Mes profils", profils_sous_titre: "Retrouve et gère tous tes CV enregistrés.",
+    action_partager: "Partager", action_reglages: "Réglages",
+    bouton_creer_profil: "Créer un nouveau profil", reglages_titre: "Réglages", reglages_contacter: "Nous contacter", reglages_vider: "Vider toutes mes données",
+    reglages_vider_confirm: "Supprimer tous tes CV enregistrés ? Cette action est irréversible.",
+    reglages_annuler: "Annuler", reglages_tout_supprimer: "Tout supprimer", reglages_version: "Version",
+    reglages_mode_sombre: "Mode sombre", reglages_langue: "Langue de l'application", reglages_taille_papier: "Taille de papier",
+    reglages_politique: "Politique de confidentialité", reglages_conditions: "Conditions d'utilisation",
+    retour_profils: "← Profils", retour_modeles: "← Modèles",
+    carte_vide: "Aucun CV pour l'instant.<br>Crée ton premier profil ci-dessous.",
+    action_dupliquer: "Dupliquer", action_supprimer: "Supprimer", action_modifier: "✎ Modifier", action_voir: "👁 Voir CV", action_retirer: "Retirer", etiquette_base: "Base",
+    confirm_supprimer_cv: "Supprimer ce CV ? Cette action est irréversible.",
+    etape_format: "Étape {n} sur {t}", etape_mot: "Étape", etape_sur: "sur",
+    noms_etapes: ["Informations personnelles", "Expérience", "Formation", "Compétences", "Objectif"],
+    bouton_suivant: "Suivant →", bouton_precedent: "← Précédent", bouton_suivant_sections: "Suivant : Sections →", bouton_terminer: "Terminer",
+    gerer_sections_titre: "Gérer mes sections", gerer_sections_sous_titre: "Choisis les sections à inclure, et leur ordre.",
+    sections_actives_titre: "Mes sections actives", glisser_deposer_note: "Glisse-dépose pour réordonner.",
+    ajouter_sections_titre: "Ajouter des sections", creer_section_titre: "Créer ma propre section",
+    creer_section_placeholder: "Ex : Permis de conduire...", bouton_creer_section: "+ Créer la section",
+    modeles_titre: "Choisis ton modèle", couleur_label: "Couleur :", couleur_note: "Change la couleur en direct",
+    bouton_telecharger: "Télécharger", bouton_creation_pdf: "Création du PDF...", bouton_chargement: "Chargement...",
+    pdf_pret: "PDF prêt ✓", erreur_pub_non_prete: "Erreur pub : pub non prête", erreur_pub_prefix: "Erreur pub : ", detail_pub_non_prete: "pub non prête",
+    erreur_pdf_lent: "Erreur : la génération du PDF a pris trop de temps, réessaie.",
+    erreur_pdf_prefix: "Erreur PDF : ", erreur_enregistrement_prefix: "Erreur enregistrement : ",
+    partage_texte: "Découvre NextCV, l'appli gratuite pour créer ton CV en quelques minutes !", partage_dialog_titre: "Partager NextCV",
+    section_objectif: "Objectif", section_experience: "Expérience", section_experience_pro: "Expérience professionnelle",
+    section_formation: "Formation", section_competences: "Compétences",
+    noms_sections_optionnelles: ["Titre d'emploi","Langues","Projets","Intérêts","Réalisations et récompenses","Activités","Publication","Information additionnelle","Signature","Déclaration","Lettre de motivation","Logiciel","Références"],
+    papier_a4: "A4", papier_lettre: "Lettre (US)",
+    politique_titre: "Politique de confidentialité",
+    politique_texte: "NextCV ne collecte aucune information personnelle identifiable. Toutes les données de ton CV (nom, expériences, formations, etc.) sont enregistrées uniquement sur ton téléphone, dans la mémoire locale de l'application — elles ne sont jamais envoyées à un serveur.<br><br>L'application affiche des publicités fournies par Google AdMob pour rester gratuite. Google peut collecter certaines données techniques (identifiant publicitaire de l'appareil) conformément à sa propre politique de confidentialité, afin d'afficher des publicités pertinentes.<br><br>Aucun compte n'est nécessaire pour utiliser NextCV. Tu peux supprimer toutes tes données à tout moment depuis Réglages → Vider toutes mes données.<br><br>Pour toute question, contacte-nous à shalom.agency109@gmail.com.",
+    conditions_titre: "Conditions d'utilisation",
+    conditions_texte: "En utilisant NextCV, tu acceptes les conditions suivantes :<br><br>1. NextCV est fourni gratuitement, « tel quel », sans garantie d'exactitude ou d'adéquation à un usage particulier.<br>2. Tu es seul responsable du contenu que tu saisis dans tes CV et de leur exactitude.<br>3. L'application est financée par des publicités vidéo récompensées ; leur affichage peut dépendre de ta connexion internet.<br>4. Nous nous réservons le droit de modifier ou d'améliorer l'application à tout moment.<br>5. Pour toute question concernant ces conditions, contacte-nous à shalom.agency109@gmail.com."
+  },
+  en: {
+    profils_titre: "My profiles", profils_sous_titre: "Find and manage all your saved CVs.",
+    action_partager: "Share", action_reglages: "Settings",
+    bouton_creer_profil: "Create a new profile", reglages_titre: "Settings", reglages_contacter: "Contact us", reglages_vider: "Clear all my data",
+    reglages_vider_confirm: "Delete all your saved CVs? This action cannot be undone.",
+    reglages_annuler: "Cancel", reglages_tout_supprimer: "Delete everything", reglages_version: "Version",
+    reglages_mode_sombre: "Dark mode", reglages_langue: "App language", reglages_taille_papier: "Paper size",
+    reglages_politique: "Privacy policy", reglages_conditions: "Terms of use",
+    retour_profils: "← Profiles", retour_modeles: "← Templates",
+    carte_vide: "No CV yet.<br>Create your first profile below.",
+    action_dupliquer: "Duplicate", action_supprimer: "Delete", action_modifier: "✎ Edit", action_voir: "👁 View CV", action_retirer: "Remove", etiquette_base: "Base",
+    confirm_supprimer_cv: "Delete this CV? This action cannot be undone.",
+    etape_format: "Step {n} of {t}", etape_mot: "Step", etape_sur: "of",
+    noms_etapes: ["Personal info", "Experience", "Education", "Skills", "Objective"],
+    bouton_suivant: "Next →", bouton_precedent: "← Previous", bouton_suivant_sections: "Next: Sections →", bouton_terminer: "Done",
+    gerer_sections_titre: "Manage my sections", gerer_sections_sous_titre: "Choose which sections to include, and their order.",
+    sections_actives_titre: "My active sections", glisser_deposer_note: "Drag and drop to reorder.",
+    ajouter_sections_titre: "Add sections", creer_section_titre: "Create my own section",
+    creer_section_placeholder: "E.g.: Driving license...", bouton_creer_section: "+ Create section",
+    modeles_titre: "Choose your template", couleur_label: "Color:", couleur_note: "Changes the color live",
+    bouton_telecharger: "Download", bouton_creation_pdf: "Creating PDF...", bouton_chargement: "Loading...",
+    pdf_pret: "PDF ready ✓", erreur_pub_non_prete: "Ad error: ad not ready", erreur_pub_prefix: "Ad error: ", detail_pub_non_prete: "ad not ready",
+    erreur_pdf_lent: "Error: PDF generation took too long, please try again.",
+    erreur_pdf_prefix: "PDF error: ", erreur_enregistrement_prefix: "Save error: ",
+    partage_texte: "Check out NextCV, the free app to build your resume in minutes!", partage_dialog_titre: "Share NextCV",
+    section_objectif: "Objective", section_experience: "Experience", section_experience_pro: "Work experience",
+    section_formation: "Education", section_competences: "Skills",
+    noms_sections_optionnelles: ["Job title","Languages","Projects","Interests","Achievements & awards","Activities","Publication","Additional information","Signature","Declaration","Cover letter","Software","References"],
+    papier_a4: "A4", papier_lettre: "Letter (US)",
+    politique_titre: "Privacy Policy",
+    politique_texte: "NextCV does not collect any personally identifiable information. All your CV data (name, experience, education, etc.) is stored only on your phone, in the app's local storage — it is never sent to a server.<br><br>The app shows ads provided by Google AdMob to remain free. Google may collect certain technical data (device advertising identifier) under its own privacy policy, in order to show relevant ads.<br><br>No account is required to use NextCV. You can delete all your data at any time from Settings → Clear all my data.<br><br>For any question, contact us at shalom.agency109@gmail.com.",
+    conditions_titre: "Terms of Use",
+    conditions_texte: "By using NextCV, you agree to the following terms:<br><br>1. NextCV is provided free of charge, \"as is\", without warranty of accuracy or fitness for a particular purpose.<br>2. You are solely responsible for the content you enter in your CVs and its accuracy.<br>3. The app is funded by rewarded video ads; their display may depend on your internet connection.<br>4. We reserve the right to modify or improve the app at any time.<br>5. For any question about these terms, contact us at shalom.agency109@gmail.com."
+  },
+  es: {
+    profils_titre: "Mis perfiles", profils_sous_titre: "Encuentra y gestiona todos tus CV guardados.",
+    action_partager: "Compartir", action_reglages: "Ajustes",
+    bouton_creer_profil: "Crear nuevo perfil", reglages_titre: "Ajustes", reglages_contacter: "Contáctanos", reglages_vider: "Borrar todos mis datos",
+    reglages_vider_confirm: "¿Eliminar todos tus CV guardados? Esta acción no se puede deshacer.",
+    reglages_annuler: "Cancelar", reglages_tout_supprimer: "Eliminar todo", reglages_version: "Versión",
+    reglages_mode_sombre: "Modo oscuro", reglages_langue: "Idioma de la app", reglages_taille_papier: "Tamaño de papel",
+    reglages_politique: "Política de privacidad", reglages_conditions: "Términos de uso",
+    retour_profils: "← Perfiles", retour_modeles: "← Plantillas",
+    carte_vide: "Aún no tienes ningún CV.<br>Crea tu primer perfil abajo.",
+    action_dupliquer: "Duplicar", action_supprimer: "Eliminar", action_modifier: "✎ Editar", action_voir: "👁 Ver CV", action_retirer: "Quitar", etiquette_base: "Base",
+    confirm_supprimer_cv: "¿Eliminar este CV? Esta acción no se puede deshacer.",
+    etape_format: "Paso {n} de {t}", etape_mot: "Paso", etape_sur: "de",
+    noms_etapes: ["Datos personales", "Experiencia", "Formación", "Habilidades", "Objetivo"],
+    bouton_suivant: "Siguiente →", bouton_precedent: "← Anterior", bouton_suivant_sections: "Siguiente: Secciones →", bouton_terminer: "Finalizar",
+    gerer_sections_titre: "Gestionar mis secciones", gerer_sections_sous_titre: "Elige qué secciones incluir y su orden.",
+    sections_actives_titre: "Mis secciones activas", glisser_deposer_note: "Arrastra y suelta para reordenar.",
+    ajouter_sections_titre: "Añadir secciones", creer_section_titre: "Crear mi propia sección",
+    creer_section_placeholder: "Ej.: Carné de conducir...", bouton_creer_section: "+ Crear sección",
+    modeles_titre: "Elige tu plantilla", couleur_label: "Color:", couleur_note: "Cambia el color en vivo",
+    bouton_telecharger: "Descargar", bouton_creation_pdf: "Creando PDF...", bouton_chargement: "Cargando...",
+    pdf_pret: "PDF listo ✓", erreur_pub_non_prete: "Error de anuncio: anuncio no disponible", erreur_pub_prefix: "Error de anuncio: ", detail_pub_non_prete: "anuncio no disponible",
+    erreur_pdf_lent: "Error: la generación del PDF tardó demasiado, inténtalo de nuevo.",
+    erreur_pdf_prefix: "Error de PDF: ", erreur_enregistrement_prefix: "Error al guardar: ",
+    partage_texte: "Descubre NextCV, la app gratuita para crear tu CV en minutos!", partage_dialog_titre: "Compartir NextCV",
+    section_objectif: "Objetivo", section_experience: "Experiencia", section_experience_pro: "Experiencia laboral",
+    section_formation: "Formación", section_competences: "Habilidades",
+    noms_sections_optionnelles: ["Puesto deseado","Idiomas","Proyectos","Intereses","Logros y premios","Actividades","Publicación","Información adicional","Firma","Declaración","Carta de presentación","Software","Referencias"],
+    papier_a4: "A4", papier_lettre: "Carta (US)",
+    politique_titre: "Política de privacidad",
+    politique_texte: "NextCV no recopila ninguna información de identificación personal. Todos los datos de tu CV (nombre, experiencia, formación, etc.) se guardan únicamente en tu teléfono, en el almacenamiento local de la app — nunca se envían a un servidor.<br><br>La app muestra anuncios proporcionados por Google AdMob para seguir siendo gratuita. Google puede recopilar ciertos datos técnicos (identificador publicitario del dispositivo) según su propia política de privacidad, para mostrar anuncios relevantes.<br><br>No se necesita ninguna cuenta para usar NextCV. Puedes eliminar todos tus datos en cualquier momento desde Ajustes → Borrar todos mis datos.<br><br>Para cualquier pregunta, contáctanos en shalom.agency109@gmail.com.",
+    conditions_titre: "Términos de uso",
+    conditions_texte: "Al usar NextCV, aceptas los siguientes términos:<br><br>1. NextCV se ofrece de forma gratuita, \"tal cual\", sin garantía de exactitud o idoneidad para un propósito particular.<br>2. Eres el único responsable del contenido que introduces en tus CV y de su exactitud.<br>3. La app se financia con anuncios de video recompensados; su visualización puede depender de tu conexión a internet.<br>4. Nos reservamos el derecho de modificar o mejorar la app en cualquier momento.<br>5. Para cualquier pregunta sobre estos términos, contáctanos en shalom.agency109@gmail.com."
+  },
+  zh: {
+    profils_titre: "我的简历", profils_sous_titre: "查看和管理你保存的所有简历。",
+    action_partager: "分享", action_reglages: "设置",
+    bouton_creer_profil: "创建新简历", reglages_titre: "设置", reglages_contacter: "联系我们", reglages_vider: "清除所有数据",
+    reglages_vider_confirm: "删除所有已保存的简历？此操作无法撤销。",
+    reglages_annuler: "取消", reglages_tout_supprimer: "全部删除", reglages_version: "版本",
+    reglages_mode_sombre: "深色模式", reglages_langue: "应用语言", reglages_taille_papier: "纸张大小",
+    reglages_politique: "隐私政策", reglages_conditions: "使用条款",
+    retour_profils: "← 简历列表", retour_modeles: "← 模板",
+    carte_vide: "暂无简历。<br>在下方创建你的第一份简历。",
+    action_dupliquer: "复制", action_supprimer: "删除", action_modifier: "✎ 编辑", action_voir: "👁 查看简历", action_retirer: "移除", etiquette_base: "基础",
+    confirm_supprimer_cv: "删除这份简历？此操作无法撤销。",
+    etape_format: "第 {n} 步，共 {t} 步", etape_mot: "第", etape_sur: "步，共5步",
+    noms_etapes: ["个人信息", "工作经历", "教育背景", "技能", "求职目标"],
+    bouton_suivant: "下一步 →", bouton_precedent: "← 上一步", bouton_suivant_sections: "下一步：栏目 →", bouton_terminer: "完成",
+    gerer_sections_titre: "管理我的栏目", gerer_sections_sous_titre: "选择要包含的栏目及其顺序。",
+    sections_actives_titre: "已启用的栏目", glisser_deposer_note: "拖动以重新排序。",
+    ajouter_sections_titre: "添加栏目", creer_section_titre: "创建自定义栏目",
+    creer_section_placeholder: "例如：驾照...", bouton_creer_section: "+ 创建栏目",
+    modeles_titre: "选择你的模板", couleur_label: "颜色：", couleur_note: "实时更改颜色",
+    bouton_telecharger: "下载", bouton_creation_pdf: "正在生成PDF...", bouton_chargement: "加载中...",
+    pdf_pret: "PDF已就绪 ✓", erreur_pub_non_prete: "广告错误：广告未准备好", erreur_pub_prefix: "广告错误：", detail_pub_non_prete: "广告未准备好",
+    erreur_pdf_lent: "错误：生成PDF耗时过长，请重试。",
+    erreur_pdf_prefix: "PDF错误：", erreur_enregistrement_prefix: "保存错误：",
+    partage_texte: "快来试试NextCV，几分钟内免费制作你的简历！", partage_dialog_titre: "分享 NextCV",
+    section_objectif: "求职目标", section_experience: "工作经历", section_experience_pro: "工作经历",
+    section_formation: "教育背景", section_competences: "技能",
+    noms_sections_optionnelles: ["职位名称","语言","项目经历","兴趣爱好","成就与奖项","活动经历","出版物","补充信息","签名","声明","求职信","软件技能","推荐人"],
+    papier_a4: "A4", papier_lettre: "美式信纸 (Letter)",
+    politique_titre: "隐私政策",
+    politique_texte: "NextCV 不收集任何个人身份信息。你简历中的所有数据（姓名、工作经历、教育背景等）仅保存在你的手机本地存储中，绝不会发送到服务器。<br><br>为保持应用免费，应用会展示由 Google AdMob 提供的广告。根据其隐私政策，Google 可能会收集某些技术数据（设备广告标识符）以展示相关广告。<br><br>使用 NextCV 无需注册账号。你可以随时在\"设置 → 清除所有数据\"中删除你的全部数据。<br><br>如有任何问题，请通过 shalom.agency109@gmail.com 联系我们。",
+    conditions_titre: "使用条款",
+    conditions_texte: "使用 NextCV 即表示你同意以下条款：<br><br>1. NextCV 免费提供，\"按原样\"提供，不保证准确性或适用于特定用途。<br>2. 你对在简历中输入的内容及其准确性负全部责任。<br>3. 本应用通过激励视频广告获得资金支持；广告展示可能取决于你的网络连接。<br>4. 我们保留随时修改或改进本应用的权利。<br>5. 如对这些条款有任何疑问，请通过 shalom.agency109@gmail.com 联系我们。"
+  }
+};
+let codeLangue = localStorage.getItem("nextcv_langue") || "fr";
+if (!TRADUCTIONS[codeLangue]) codeLangue = "fr";
+let L = TRADUCTIONS[codeLangue];
+function changerLangue(code) {
+  localStorage.setItem("nextcv_langue", code);
+  location.reload();
+}
+
 const CLE_STOCKAGE = "cv_express_profils";
 
 const suggestionsObjectif = [
@@ -478,6 +719,7 @@ function afficherEcranProfils() {
   document.getElementById("ecranGererSections").classList.remove("visible");
   document.getElementById("ecranModelesGalerie").classList.remove("visible");
   document.getElementById("ecranModeleDetail").classList.remove("visible");
+  document.getElementById("ecranReglages").classList.remove("visible");
   document.getElementById("ecranProfils").classList.add("visible");
   document.getElementById("boutonCreer").style.display = "block";
   afficherProfils();
@@ -486,30 +728,30 @@ function afficherEcranProfils() {
 function afficherProfils() {
   const conteneur = document.getElementById("listeProfils");
   if (profils.length === 0) {
-    conteneur.innerHTML = `<div class="carte-vide">Aucun CV pour l'instant.<br>Crée ton premier profil ci-dessous.</div>`;
+    conteneur.innerHTML = `<div class="carte-vide">${L.carte_vide}</div>`;
     return;
   }
   conteneur.innerHTML = profils.map(p => `
     <div class="carte-profil">
       <div class="actions-coin">
-        <button type="button" class="bouton-icone" title="Dupliquer" onclick="dupliquerProfil('${p.id}')">⧉</button>
-        <button type="button" class="bouton-icone danger" title="Supprimer" onclick="supprimerProfil('${p.id}')">🗑</button>
+        <button type="button" class="bouton-icone" title="${L.action_dupliquer}" onclick="dupliquerProfil('${p.id}')">⧉</button>
+        <button type="button" class="bouton-icone danger" title="${L.action_supprimer}" onclick="supprimerProfil('${p.id}')">🗑</button>
       </div>
       <div class="avatar">${p.donnees.photo ? `<img src="${p.donnees.photo}" alt="">` : initiales(p.donnees.nom)}</div>
       <p class="nom-profil">${p.donnees.nom || "Sans nom"}</p>
       <p class="date-profil">Modifié le ${p.dateModification}</p>
       ${idEnAttenteSuppression === p.id ? `
         <div class="confirmation-suppression">
-          <p>Supprimer ce CV ? Cette action est irréversible.</p>
+          <p>${L.confirm_supprimer_cv}</p>
           <div class="confirmation-boutons">
-            <button type="button" class="bouton-annuler-suppression" onclick="annulerSuppression()">Annuler</button>
-            <button type="button" class="bouton-confirmer-suppression" onclick="confirmerSuppression('${p.id}')">Supprimer</button>
+            <button type="button" class="bouton-annuler-suppression" onclick="annulerSuppression()">${L.reglages_annuler}</button>
+            <button type="button" class="bouton-confirmer-suppression" onclick="confirmerSuppression('${p.id}')">${L.action_supprimer}</button>
           </div>
         </div>
       ` : `
         <div class="ligne-boutons">
-          <button type="button" class="bouton-action bouton-modifier" onclick="ouvrirFormulaire('${p.id}')">✎ Modifier</button>
-          <button type="button" class="bouton-action bouton-voir" onclick="voirProfil('${p.id}')">👁 Voir CV</button>
+          <button type="button" class="bouton-action bouton-modifier" onclick="ouvrirFormulaire('${p.id}')">${L.action_modifier}</button>
+          <button type="button" class="bouton-action bouton-voir" onclick="voirProfil('${p.id}')">${L.action_voir}</button>
         </div>
       `}
     </div>
@@ -532,6 +774,54 @@ function confirmerSuppression(id) {
   sauvegarderProfils(profils);
   afficherProfils();
 }
+function afficherEcranReglages() {
+  document.getElementById("ecranProfils").classList.remove("visible");
+  document.getElementById("boutonCreer").style.display = "none";
+  document.getElementById("zoneConfirmationVidage").innerHTML = "";
+  document.getElementById("ecranReglages").classList.add("visible");
+}
+document.getElementById("boutonOuvrirReglages").addEventListener("click", afficherEcranReglages);
+document.getElementById("boutonRetourDepuisReglages").addEventListener("click", () => {
+  document.getElementById("ecranReglages").classList.remove("visible");
+  afficherEcranProfils();
+});
+
+document.getElementById("boutonPartagerApp").addEventListener("click", async () => {
+  const texte = L.partage_texte;
+  const Share = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Share;
+  if (Share) {
+    try { await Share.share({ title: "NextCV", text: texte, dialogTitle: L.partage_dialog_titre }); }
+    catch (e) { /* menu de partage ferme sans choix, rien a faire */ }
+  } else if (navigator.share) {
+    try { await navigator.share({ title: "NextCV", text: texte }); } catch (e) {}
+  } else {
+    afficherMessageInfo("Partage non disponible sur cet appareil.");
+  }
+});
+
+document.getElementById("ligneNousContacter").addEventListener("click", () => {
+  window.location.href = "mailto:shalom.agency109@gmail.com?subject=" + encodeURIComponent("NextCV - Contact");
+});
+
+document.getElementById("ligneViderDonnees").addEventListener("click", () => {
+  document.getElementById("zoneConfirmationVidage").innerHTML = `
+    <div class="confirmation-suppression" style="margin:4px 18px 18px;">
+      <p>Supprimer tous tes CV enregistrés ? Cette action est irréversible.</p>
+      <div class="confirmation-boutons">
+        <button type="button" class="bouton-annuler-suppression" onclick="document.getElementById('zoneConfirmationVidage').innerHTML=''">Annuler</button>
+        <button type="button" class="bouton-confirmer-suppression" onclick="viderToutesLesDonnees()">Tout supprimer</button>
+      </div>
+    </div>`;
+});
+function viderToutesLesDonnees() {
+  profils = [];
+  sauvegarderProfils(profils);
+  document.getElementById("zoneConfirmationVidage").innerHTML = "";
+  document.getElementById("ecranReglages").classList.remove("visible");
+  afficherEcranProfils();
+  afficherMessageInfo("Toutes tes données ont été supprimées.");
+}
+
 function afficherMessageInfo(texte) {
   const message = document.getElementById("messageInfo");
   message.textContent = texte;
@@ -580,10 +870,10 @@ function rendreModerne(d) {
     <div class="banniere"><div class="photo" style="${d.photo?`background-image:url('${d.photo}');background-size:cover;background-position:center;`:""}"></div><div class="identite"><h1>${d.nom||"Ton nom"}</h1><p class="titre-poste">${d.poste||""}</p></div></div>
     <div class="contact"><span>${d.telephone||""}</span><span>${d.email||""}</span><span>${d.ville||""}</span></div>
     <div class="corps">
-      ${d.objectif?`<section class="bloc"><h2 class="titre-section">Objectif</h2><p class="objectif-texte">${d.objectif}</p></section>`:""}
-      <section class="bloc"><h2 class="titre-section">Expérience</h2>${exp}</section>
-      <section class="bloc"><h2 class="titre-section">Formation</h2>${form}</section>
-      <section class="bloc"><h2 class="titre-section">Compétences</h2><div class="competences">${comp}</div></section>
+      ${d.objectif?`<section class="bloc"><h2 class="titre-section">${L.section_objectif}</h2><p class="objectif-texte">${d.objectif}</p></section>`:""}
+      <section class="bloc"><h2 class="titre-section">${L.section_experience}</h2>${exp}</section>
+      <section class="bloc"><h2 class="titre-section">${L.section_formation}</h2>${form}</section>
+      <section class="bloc"><h2 class="titre-section">${L.section_competences}</h2><div class="competences">${comp}</div></section>
     ${rendreSectionsOptionnellesHTML(d, "titre-section")}
     </div>`;
 }
@@ -594,10 +884,10 @@ function rendreSobre(d) {
   return `
     <div class="cv-sobre">
       <div class="entete-sobre"><h1>${(d.nom||"TON NOM").toUpperCase()}</h1><p>${d.poste||""}</p><div class="contact-sobre">${d.telephone||""} · ${d.email||""} · ${d.ville||""}</div></div>
-      ${d.objectif?`<p class="titre-section-sobre">Objectif</p><p style="font-size:12.5px;line-height:1.5">${d.objectif}</p>`:""}
-      <p class="titre-section-sobre">Expérience professionnelle</p>${exp}
-      <p class="titre-section-sobre">Formation</p>${form}
-      <p class="titre-section-sobre">Compétences</p>
+      ${d.objectif?`<p class="titre-section-sobre">${L.section_objectif}</p><p style="font-size:12.5px;line-height:1.5">${d.objectif}</p>`:""}
+      <p class="titre-section-sobre">${L.section_experience_pro}</p>${exp}
+      <p class="titre-section-sobre">${L.section_formation}</p>${form}
+      <p class="titre-section-sobre">${L.section_competences}</p>
       <p class="competences-sobre">${(d.competences||[]).join(" · ")}</p>
     ${rendreSectionsOptionnellesHTML(d, "titre-section-sobre")}
     </div>`;
@@ -616,12 +906,12 @@ function rendreLateral(d) {
         <div class="lateral-bloc"><p class="lateral-titre">Contact</p>
           <p class="lateral-ligne">${d.telephone||""}</p><p class="lateral-ligne">${d.email||""}</p><p class="lateral-ligne">${d.ville||""}</p>
         </div>
-        ${(d.competences||[]).length?`<div class="lateral-bloc"><p class="lateral-titre">Compétences</p>${comp}</div>`:""}
+        ${(d.competences||[]).length?`<div class="lateral-bloc"><p class="lateral-titre">${L.section_competences}</p>${comp}</div>`:""}
       </div>
       <div class="lateral-colonne-droite">
-        ${d.objectif?`<p class="lateral-section-titre">Objectif</p><p style="font-size:12.5px;line-height:1.5;margin:0 0 16px;">${d.objectif}</p>`:""}
-        <p class="lateral-section-titre">Expérience</p>${exp}
-        <p class="lateral-section-titre">Formation</p>${form}
+        ${d.objectif?`<p class="lateral-section-titre">${L.section_objectif}</p><p style="font-size:12.5px;line-height:1.5;margin:0 0 16px;">${d.objectif}</p>`:""}
+        <p class="lateral-section-titre">${L.section_experience}</p>${exp}
+        <p class="lateral-section-titre">${L.section_formation}</p>${form}
       </div>
     ${rendreSectionsOptionnellesHTML(d, "lateral-section-titre")}
     </div>`;
@@ -634,10 +924,10 @@ function rendreChrono(d) {
   return `
     <div class="cv-chrono">
       <div class="chrono-entete"><h1>${d.nom||"Ton nom"}</h1><p>${d.poste||""}</p><div class="chrono-contact">${d.telephone||""} · ${d.email||""} · ${d.ville||""}</div></div>
-      ${d.objectif?`<p class="chrono-section-titre">Objectif</p><p style="font-size:12.5px;line-height:1.5">${d.objectif}</p>`:""}
-      <p class="chrono-section-titre">Expérience</p>${exp}
-      <p class="chrono-section-titre">Formation</p>${form}
-      <p class="chrono-section-titre">Compétences</p><div class="competences">${comp}</div>
+      ${d.objectif?`<p class="chrono-section-titre">${L.section_objectif}</p><p style="font-size:12.5px;line-height:1.5">${d.objectif}</p>`:""}
+      <p class="chrono-section-titre">${L.section_experience}</p>${exp}
+      <p class="chrono-section-titre">${L.section_formation}</p>${form}
+      <p class="chrono-section-titre">${L.section_competences}</p><div class="competences">${comp}</div>
     ${rendreSectionsOptionnellesHTML(d, "chrono-section-titre")}
     </div>`;
 }
@@ -648,10 +938,10 @@ function rendreMinimal(d) {
   return `
     <div class="cv-minimal">
       <div class="minimal-entete"><h1>${d.nom||"Ton nom"}</h1><p>${d.poste||""}</p><div class="minimal-contact">${d.telephone||""} — ${d.email||""} — ${d.ville||""}</div></div>
-      ${d.objectif?`<p class="minimal-titre">Objectif</p><p style="font-size:12.5px;line-height:1.6;color:#555;">${d.objectif}</p>`:""}
-      <p class="minimal-titre">Expérience</p>${exp}
-      <p class="minimal-titre">Formation</p>${form}
-      <p class="minimal-titre">Compétences</p>
+      ${d.objectif?`<p class="minimal-titre">${L.section_objectif}</p><p style="font-size:12.5px;line-height:1.6;color:#555;">${d.objectif}</p>`:""}
+      <p class="minimal-titre">${L.section_experience}</p>${exp}
+      <p class="minimal-titre">${L.section_formation}</p>${form}
+      <p class="minimal-titre">${L.section_competences}</p>
       <p class="minimal-competences">${(d.competences||[]).map(c=>`<span>${c}</span>`).join("")}</p>
     ${rendreSectionsOptionnellesHTML(d, "minimal-titre")}
     </div>`;
@@ -664,10 +954,10 @@ function rendreCompact(d) {
     <div class="cv-compact">
       <div class="compact-entete"><h1>${d.nom||"Ton nom"}</h1><span class="poste">${d.poste||""}</span></div>
       <div class="compact-contact">${d.telephone||""} · ${d.email||""} · ${d.ville||""}</div>
-      ${d.objectif?`<p class="compact-titre">Objectif</p><p style="margin:0;">${d.objectif}</p>`:""}
-      <p class="compact-titre">Expérience</p>${exp}
-      <p class="compact-titre">Formation</p>${form}
-      <p class="compact-titre">Compétences</p><p class="compact-competences">${(d.competences||[]).join(" · ")}</p>
+      ${d.objectif?`<p class="compact-titre">${L.section_objectif}</p><p style="margin:0;">${d.objectif}</p>`:""}
+      <p class="compact-titre">${L.section_experience}</p>${exp}
+      <p class="compact-titre">${L.section_formation}</p>${form}
+      <p class="compact-titre">${L.section_competences}</p><p class="compact-competences">${(d.competences||[]).join(" · ")}</p>
     ${rendreSectionsOptionnellesHTML(d, "compact-titre")}
     </div>`;
 }
@@ -681,10 +971,10 @@ function rendreElegant(d) {
       <div class="elegant-ligne-or"></div>
       <p class="elegant-poste">${d.poste||""}</p>
       <div class="elegant-contact">${d.telephone||""} · ${d.email||""} · ${d.ville||""}</div>
-      ${d.objectif?`<p class="elegant-titre">Objectif</p><p style="font-size:12.5px;line-height:1.6;text-align:left;">${d.objectif}</p>`:""}
-      <p class="elegant-titre">Expérience</p>${exp}
-      <p class="elegant-titre">Formation</p>${form}
-      <p class="elegant-titre">Compétences</p><p class="elegant-competences">${(d.competences||[]).join(" · ")}</p>
+      ${d.objectif?`<p class="elegant-titre">${L.section_objectif}</p><p style="font-size:12.5px;line-height:1.6;text-align:left;">${d.objectif}</p>`:""}
+      <p class="elegant-titre">${L.section_experience}</p>${exp}
+      <p class="elegant-titre">${L.section_formation}</p>${form}
+      <p class="elegant-titre">${L.section_competences}</p><p class="elegant-competences">${(d.competences||[]).join(" · ")}</p>
     ${rendreSectionsOptionnellesHTML(d, "elegant-titre")}
     </div>`;
 }
@@ -699,10 +989,10 @@ function rendreAsym(d) {
       <div class="asym-corps">
         <p class="asym-poste">${d.poste||""}</p>
         <div class="asym-contact">${d.telephone||""} · ${d.email||""} · ${d.ville||""}</div>
-        ${d.objectif?`<p class="asym-titre">Objectif</p><p style="font-size:12.5px;line-height:1.5">${d.objectif}</p>`:""}
-        <p class="asym-titre">Expérience</p>${exp}
-        <p class="asym-titre">Formation</p>${form}
-        <p class="asym-titre">Compétences</p><div class="competences">${comp}</div>
+        ${d.objectif?`<p class="asym-titre">${L.section_objectif}</p><p style="font-size:12.5px;line-height:1.5">${d.objectif}</p>`:""}
+        <p class="asym-titre">${L.section_experience}</p>${exp}
+        <p class="asym-titre">${L.section_formation}</p>${form}
+        <p class="asym-titre">${L.section_competences}</p><div class="competences">${comp}</div>
       </div>
     ${rendreSectionsOptionnellesHTML(d, "asym-titre")}
     </div>`;
@@ -718,13 +1008,13 @@ function rendreInverse(d) {
         <h1>${d.nom||"Ton nom"}</h1>
         <p class="poste">${d.poste||""}</p>
         ${d.objectif?`<p style="font-size:12.5px;line-height:1.5;margin:0 0 14px;">${d.objectif}</p>`:""}
-        <p class="lateral-section-titre">Expérience</p>${exp}
-        <p class="lateral-section-titre">Formation</p>${form}
+        <p class="lateral-section-titre">${L.section_experience}</p>${exp}
+        <p class="lateral-section-titre">${L.section_formation}</p>${form}
       </div>
       <div class="inverse-droite">
         <div class="lateral-photo" style="${d.photo?`background-image:url('${d.photo}');background-size:cover;background-position:center;`:""}"></div>
         <div class="lateral-bloc"><p class="lateral-titre">Contact</p><p class="lateral-ligne">${d.telephone||""}</p><p class="lateral-ligne">${d.email||""}</p><p class="lateral-ligne">${d.ville||""}</p></div>
-        ${(d.competences||[]).length?`<div class="lateral-bloc"><p class="lateral-titre">Compétences</p>${comp}</div>`:""}
+        ${(d.competences||[]).length?`<div class="lateral-bloc"><p class="lateral-titre">${L.section_competences}</p>${comp}</div>`:""}
       </div>
     ${rendreSectionsOptionnellesHTML(d, "lateral-section-titre")}
     </div>`;
@@ -753,10 +1043,10 @@ function rendreCarte(d) {
     <div class="cv-carte">
       <div class="carte-entete"><h1>${d.nom||"Ton nom"}</h1><span class="badge-poste">${d.poste||""}</span><div class="carte-contact">${d.telephone||""} · ${d.email||""} · ${d.ville||""}</div></div>
       <div class="carte-corps">
-        ${d.objectif?`<div class="carte-encadre"><p class="titre-section">Objectif</p><p style="font-size:12.5px;line-height:1.5;margin:0;">${d.objectif}</p></div>`:""}
-        <div class="carte-encadre"><p class="titre-section">Expérience</p>${exp}</div>
-        <div class="carte-encadre"><p class="titre-section">Formation</p>${form}</div>
-        <div class="carte-encadre"><p class="titre-section">Compétences</p><div class="competences">${comp}</div></div>
+        ${d.objectif?`<div class="carte-encadre"><p class="titre-section">${L.section_objectif}</p><p style="font-size:12.5px;line-height:1.5;margin:0;">${d.objectif}</p></div>`:""}
+        <div class="carte-encadre"><p class="titre-section">${L.section_experience}</p>${exp}</div>
+        <div class="carte-encadre"><p class="titre-section">${L.section_formation}</p>${form}</div>
+        <div class="carte-encadre"><p class="titre-section">${L.section_competences}</p><div class="competences">${comp}</div></div>
       </div>
     ${rendreSectionsOptionnellesHTML(d, "titre-section")}
     </div>`;
@@ -769,10 +1059,10 @@ function rendreInfographique(d) {
   return `
     <div class="cv-infographique">
       <div class="info-entete"><h1>${d.nom||"Ton nom"}</h1><p>${d.poste||""}</p><div class="info-contact">${d.telephone||""} · ${d.email||""} · ${d.ville||""}</div></div>
-      ${d.objectif?`<span class="info-puce-titre">Objectif</span><p style="font-size:12.5px;line-height:1.5">${d.objectif}</p>`:""}
-      <span class="info-puce-titre">Expérience</span>${exp}
-      <span class="info-puce-titre">Formation</span>${form}
-      <span class="info-puce-titre">Compétences</span><div class="competences" style="margin-top:8px;">${comp}</div>
+      ${d.objectif?`<span class="info-puce-titre">${L.section_objectif}</span><p style="font-size:12.5px;line-height:1.5">${d.objectif}</p>`:""}
+      <span class="info-puce-titre">${L.section_experience}</span>${exp}
+      <span class="info-puce-titre">${L.section_formation}</span>${form}
+      <span class="info-puce-titre">${L.section_competences}</span><div class="competences" style="margin-top:8px;">${comp}</div>
     ${rendreSectionsOptionnellesHTML(d, "info-puce-titre")}
     </div>`;
 }
@@ -783,10 +1073,10 @@ function rendreProPlus(d) {
   return `
     <div class="cv-propu">
       <div class="propu-entete"><h1>${d.nom||"Ton nom"}</h1><p class="poste">${d.poste||""}</p><div class="propu-trait"></div><div class="propu-contact">${d.telephone||""} · ${d.email||""} · ${d.ville||""}</div></div>
-      ${d.objectif?`<p class="propu-titre">Objectif</p><p style="font-size:12.5px;line-height:1.5">${d.objectif}</p>`:""}
-      <p class="propu-titre">Expérience</p>${exp}
-      <p class="propu-titre">Formation</p>${form}
-      <p class="propu-titre">Compétences</p><p style="font-size:12.5px;">${(d.competences||[]).join(" · ")}</p>
+      ${d.objectif?`<p class="propu-titre">${L.section_objectif}</p><p style="font-size:12.5px;line-height:1.5">${d.objectif}</p>`:""}
+      <p class="propu-titre">${L.section_experience}</p>${exp}
+      <p class="propu-titre">${L.section_formation}</p>${form}
+      <p class="propu-titre">${L.section_competences}</p><p style="font-size:12.5px;">${(d.competences||[]).join(" · ")}</p>
     ${rendreSectionsOptionnellesHTML(d, "propu-titre")}
     </div>`;
 }
@@ -802,10 +1092,10 @@ function rendreDeuxTons(d) {
         <div class="deuxtons-droite"><span>${d.telephone||""}</span><span>${d.email||""}</span><span>${d.ville||""}</span></div>
       </div>
       <div class="corps">
-        ${d.objectif?`<section class="bloc"><h2 class="titre-section">Objectif</h2><p class="objectif-texte">${d.objectif}</p></section>`:""}
-        <section class="bloc"><h2 class="titre-section">Expérience</h2>${exp}</section>
-        <section class="bloc"><h2 class="titre-section">Formation</h2>${form}</section>
-        <section class="bloc"><h2 class="titre-section">Compétences</h2><div class="competences">${comp}</div></section>
+        ${d.objectif?`<section class="bloc"><h2 class="titre-section">${L.section_objectif}</h2><p class="objectif-texte">${d.objectif}</p></section>`:""}
+        <section class="bloc"><h2 class="titre-section">${L.section_experience}</h2>${exp}</section>
+        <section class="bloc"><h2 class="titre-section">${L.section_formation}</h2>${form}</section>
+        <section class="bloc"><h2 class="titre-section">${L.section_competences}</h2><div class="competences">${comp}</div></section>
       </div>
     ${rendreSectionsOptionnellesHTML(d, "titre-section")}
     </div>`;
@@ -821,10 +1111,10 @@ function rendrePhotoCentree(d) {
       <p class="photocentree-poste">${d.poste||""}</p>
       <div class="photocentree-contact">${d.telephone||""} · ${d.email||""} · ${d.ville||""}</div>
       <div class="photocentree-separateur"></div>
-      ${d.objectif?`<p class="photocentree-titre">Objectif</p><p style="font-size:12.5px;line-height:1.5;text-align:left;">${d.objectif}</p>`:""}
-      <p class="photocentree-titre">Expérience</p>${exp}
-      <p class="photocentree-titre">Formation</p>${form}
-      <p class="photocentree-titre">Compétences</p><p style="text-align:left;font-size:12.5px;">${(d.competences||[]).join(" · ")}</p>
+      ${d.objectif?`<p class="photocentree-titre">${L.section_objectif}</p><p style="font-size:12.5px;line-height:1.5;text-align:left;">${d.objectif}</p>`:""}
+      <p class="photocentree-titre">${L.section_experience}</p>${exp}
+      <p class="photocentree-titre">${L.section_formation}</p>${form}
+      <p class="photocentree-titre">${L.section_competences}</p><p style="text-align:left;font-size:12.5px;">${(d.competences||[]).join(" · ")}</p>
     ${rendreSectionsOptionnellesHTML(d, "photocentree-titre")}
     </div>`;
 }
@@ -836,10 +1126,10 @@ function rendreBento(d) {
   return `
     <div class="cv-bento">
       <div class="bento-bloc bento-entete"><h1>${d.nom||"Ton nom"}</h1><p>${d.poste||""} · ${d.telephone||""} · ${d.email||""}</p></div>
-      ${d.objectif?`<div class="bento-bloc bento-objectif"><p class="titre-mini">Objectif</p><p style="font-size:11.5px;margin:0;">${d.objectif}</p></div>`:""}
-      <div class="bento-bloc bento-experience"><p class="titre-mini">Expérience</p>${exp}</div>
-      <div class="bento-bloc bento-formation"><p class="titre-mini">Formation</p>${form}</div>
-      <div class="bento-bloc bento-competences"><p class="titre-mini">Compétences</p>${comp}</div>
+      ${d.objectif?`<div class="bento-bloc bento-objectif"><p class="titre-mini">${L.section_objectif}</p><p style="font-size:11.5px;margin:0;">${d.objectif}</p></div>`:""}
+      <div class="bento-bloc bento-experience"><p class="titre-mini">${L.section_experience}</p>${exp}</div>
+      <div class="bento-bloc bento-formation"><p class="titre-mini">${L.section_formation}</p>${form}</div>
+      <div class="bento-bloc bento-competences"><p class="titre-mini">${L.section_competences}</p>${comp}</div>
     ${rendreSectionsOptionnellesHTML(d, "titre-mini")}
     </div>`;
 }
@@ -854,12 +1144,12 @@ function rendreFinesDeux(d) {
         <h1 class="finesdeux-nom">${d.nom||"Ton nom"}</h1>
         <p style="margin:0;color:var(--accent-dark);font-weight:600;">${d.poste||""}</p>
         <p style="font-size:10.5px;color:var(--text-muted);margin-top:4px;">${d.telephone||""}<br>${d.email||""}<br>${d.ville||""}</p>
-        ${d.objectif?`<p class="finesdeux-titre">Objectif</p><p style="font-size:11px;line-height:1.5;">${d.objectif}</p>`:""}
-        <p class="finesdeux-titre">Compétences</p>${comp}
+        ${d.objectif?`<p class="finesdeux-titre">${L.section_objectif}</p><p style="font-size:11px;line-height:1.5;">${d.objectif}</p>`:""}
+        <p class="finesdeux-titre">${L.section_competences}</p>${comp}
       </div>
       <div class="finesdeux-col">
-        <p class="finesdeux-titre">Expérience</p>${exp}
-        <p class="finesdeux-titre">Formation</p>${form}
+        <p class="finesdeux-titre">${L.section_experience}</p>${exp}
+        <p class="finesdeux-titre">${L.section_formation}</p>${form}
       </div>
     ${rendreSectionsOptionnellesHTML(d, "finesdeux-titre")}
     </div>`;
@@ -876,10 +1166,10 @@ function rendrePastel(d) {
         <div><h1>${d.nom||"Ton nom"}</h1><p>${d.poste||""}</p></div>
       </div>
       <div class="pastel-contact">${d.telephone||""} · ${d.email||""} · ${d.ville||""}</div>
-      ${d.objectif?`<div class="pastel-carte"><p class="titre-mini">Objectif</p><p style="font-size:12.5px;margin:0;">${d.objectif}</p></div>`:""}
-      <div class="pastel-carte"><p class="titre-mini">Expérience</p>${exp}</div>
-      <div class="pastel-carte"><p class="titre-mini">Formation</p>${form}</div>
-      <div class="pastel-carte"><p class="titre-mini">Compétences</p><div class="competences">${comp}</div></div>
+      ${d.objectif?`<div class="pastel-carte"><p class="titre-mini">${L.section_objectif}</p><p style="font-size:12.5px;margin:0;">${d.objectif}</p></div>`:""}
+      <div class="pastel-carte"><p class="titre-mini">${L.section_experience}</p>${exp}</div>
+      <div class="pastel-carte"><p class="titre-mini">${L.section_formation}</p>${form}</div>
+      <div class="pastel-carte"><p class="titre-mini">${L.section_competences}</p><div class="competences">${comp}</div></div>
     ${rendreSectionsOptionnellesHTML(d, "titre-mini")}
     </div>`;
 }
@@ -892,10 +1182,10 @@ function rendreEncadre(d) {
       <div class="encadre-entete"><h1>${d.nom||"Ton nom"}</h1><p>${d.poste||""}</p></div>
       <div class="encadre-double-trait"></div>
       <div class="encadre-contact">${d.telephone||""} · ${d.email||""} · ${d.ville||""}</div>
-      ${d.objectif?`<p class="encadre-titre">Objectif</p><p style="font-size:12.5px;line-height:1.5;text-align:center;">${d.objectif}</p>`:""}
-      <p class="encadre-titre">Expérience</p>${exp}
-      <p class="encadre-titre">Formation</p>${form}
-      <p class="encadre-titre">Compétences</p><p style="text-align:center;font-size:12.5px;">${(d.competences||[]).join(" · ")}</p>
+      ${d.objectif?`<p class="encadre-titre">${L.section_objectif}</p><p style="font-size:12.5px;line-height:1.5;text-align:center;">${d.objectif}</p>`:""}
+      <p class="encadre-titre">${L.section_experience}</p>${exp}
+      <p class="encadre-titre">${L.section_formation}</p>${form}
+      <p class="encadre-titre">${L.section_competences}</p><p style="text-align:center;font-size:12.5px;">${(d.competences||[]).join(" · ")}</p>
     ${rendreSectionsOptionnellesHTML(d, "encadre-titre")}
     </div>`;
 }
@@ -907,10 +1197,10 @@ function rendrePleineCouleur(d) {
     <div class="cv-pleinecouleur">
       <div class="pleinecouleur-entete"><h1>${d.nom||"Ton nom"}</h1><p>${d.poste||""}</p></div>
       <div class="pleinecouleur-contact">${d.telephone||""} · ${d.email||""} · ${d.ville||""}</div>
-      ${d.objectif?`<p class="pleinecouleur-titre">Objectif</p><div class="pleinecouleur-carte">${d.objectif}</div>`:""}
-      <p class="pleinecouleur-titre">Expérience</p>${exp}
-      <p class="pleinecouleur-titre">Formation</p>${form}
-      <p class="pleinecouleur-titre">Compétences</p><div class="pleinecouleur-carte">${(d.competences||[]).join(" · ")}</div>
+      ${d.objectif?`<p class="pleinecouleur-titre">${L.section_objectif}</p><div class="pleinecouleur-carte">${d.objectif}</div>`:""}
+      <p class="pleinecouleur-titre">${L.section_experience}</p>${exp}
+      <p class="pleinecouleur-titre">${L.section_formation}</p>${form}
+      <p class="pleinecouleur-titre">${L.section_competences}</p><div class="pleinecouleur-carte">${(d.competences||[]).join(" · ")}</div>
     ${rendreSectionsOptionnellesHTML(d, "pleinecouleur-titre")}
     </div>`;
 }
@@ -988,15 +1278,16 @@ document.getElementById("boutonRetourVersGalerie").addEventListener("click", () 
   document.getElementById("ecranModelesGalerie").classList.add("visible");
 });
 document.getElementById("pickerCouleur").addEventListener("input", (e) => {
-  document.documentElement.style.setProperty("--accent", e.target.value);
-  document.documentElement.style.setProperty("--accent-dark", assombrirCouleur(e.target.value, 0.45));
+  const zoneApercu = document.getElementById("ecranModeleDetail");
+  zoneApercu.style.setProperty("--accent", e.target.value);
+  zoneApercu.style.setProperty("--accent-dark", assombrirCouleur(e.target.value, 0.45));
   actualiserApercuModeleDetail();
 });
 document.getElementById("boutonTelecharger").addEventListener("click", () => {
   const bouton = document.getElementById("boutonTelecharger");
   const message = document.getElementById("messageTelechargement");
   bouton.disabled = true;
-  bouton.textContent = "Chargement...";
+  bouton.textContent = L.bouton_chargement;
   message.style.display = "none";
 
   // Génère et télécharge le PDF — appelé seulement APRÈS que la pub
@@ -1062,10 +1353,10 @@ document.getElementById("boutonTelecharger").addEventListener("click", () => {
       if (!pdfTermine) {
         pdfTermine = true;
         bouton.disabled = false;
-        bouton.textContent = "Télécharger";
+        bouton.textContent = L.bouton_telecharger;
         message.style.background = "#fdecea";
         message.style.color = "#7a2a20";
-        message.textContent = "Erreur : la génération du PDF a pris trop de temps, réessaie.";
+        message.textContent = L.erreur_pdf_lent;
         message.style.display = "block";
       }
     }, 20000);
@@ -1076,7 +1367,7 @@ document.getElementById("boutonTelecharger").addEventListener("click", () => {
     // jamais signaler d'erreur.
     if (typeof html2pdf === "undefined") {
       bouton.disabled = false;
-      bouton.textContent = "Télécharger";
+      bouton.textContent = L.bouton_telecharger;
       message.style.background = "#fdecea";
       message.style.color = "#7a2a20";
       message.textContent = "Erreur : impossible de charger l'outil PDF (vérifie ta connexion internet) et réessaie.";
@@ -1084,7 +1375,7 @@ document.getElementById("boutonTelecharger").addEventListener("click", () => {
       return;
     }
 
-    bouton.textContent = "Création du PDF...";
+    bouton.textContent = L.bouton_creation_pdf;
 
     try {
       const profil = profils.find(p => p.id === idProfilEnApercu);
@@ -1096,7 +1387,7 @@ document.getElementById("boutonTelecharger").addEventListener("click", () => {
         filename: nomFichier,
         image: { type: "jpeg", quality: 0.98 },
         html2canvas: { scale: 1, useCORS: true, logging: false },
-        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
+        jsPDF: { unit: "mm", format: (localStorage.getItem("nextcv_taille_papier") === "lettre" ? "letter" : "a4"), orientation: "portrait" }
       };
 
       html2pdf().set(options).from(element).toPdf().get("pdf").then(async (pdf) => {
@@ -1107,17 +1398,17 @@ document.getElementById("boutonTelecharger").addEventListener("click", () => {
         try {
           await sauvegarderEtOuvrirPdf(blobPdf, nomFichier);
           bouton.disabled = false;
-          bouton.textContent = "Télécharger";
+          bouton.textContent = L.bouton_telecharger;
           message.style.background = "#e6f6ec";
           message.style.color = "#0a7a3d";
-          message.textContent = "PDF prêt ✓";
+          message.textContent = L.pdf_pret;
           message.style.display = "block";
         } catch (erreurSauvegarde) {
           bouton.disabled = false;
-          bouton.textContent = "Télécharger";
+          bouton.textContent = L.bouton_telecharger;
           message.style.background = "#fdecea";
           message.style.color = "#7a2a20";
-          message.textContent = "Erreur enregistrement : " + (erreurSauvegarde && erreurSauvegarde.message ? erreurSauvegarde.message : erreurSauvegarde);
+          message.textContent = L.erreur_enregistrement_prefix + (erreurSauvegarde && erreurSauvegarde.message ? erreurSauvegarde.message : erreurSauvegarde);
           message.style.display = "block";
           console.error(erreurSauvegarde);
         }
@@ -1125,20 +1416,20 @@ document.getElementById("boutonTelecharger").addEventListener("click", () => {
         if (pdfTermine) return;
         pdfTermine = true;
         bouton.disabled = false;
-        bouton.textContent = "Télécharger";
+        bouton.textContent = L.bouton_telecharger;
         message.style.background = "#fdecea";
         message.style.color = "#7a2a20";
-        message.textContent = "Erreur PDF : " + (erreur && erreur.message ? erreur.message : erreur);
+        message.textContent = L.erreur_pdf_prefix + (erreur && erreur.message ? erreur.message : erreur);
         message.style.display = "block";
         console.error(erreur);
       });
     } catch (erreurSynchrone) {
       pdfTermine = true;
       bouton.disabled = false;
-      bouton.textContent = "Télécharger";
+      bouton.textContent = L.bouton_telecharger;
       message.style.background = "#fdecea";
       message.style.color = "#7a2a20";
-      message.textContent = "Erreur PDF : " + (erreurSynchrone && erreurSynchrone.message ? erreurSynchrone.message : erreurSynchrone);
+      message.textContent = L.erreur_pdf_prefix + (erreurSynchrone && erreurSynchrone.message ? erreurSynchrone.message : erreurSynchrone);
       message.style.display = "block";
       console.error(erreurSynchrone);
     }
@@ -1150,12 +1441,12 @@ document.getElementById("boutonTelecharger").addEventListener("click", () => {
     if (dejaTraite) return;
     dejaTraite = true;
     bouton.disabled = false;
-    bouton.textContent = "Télécharger";
+    bouton.textContent = L.bouton_telecharger;
     message.style.background = "#fdecea";
     message.style.color = "#7a2a20";
     // Affiche le détail exact de l'erreur à l'écran (pour debug sans ordinateur)
     const detail = (raison && raison.message) ? raison.message : (typeof raison === "string" ? raison : JSON.stringify(raison));
-    message.textContent = "Erreur pub : " + detail;
+    message.textContent = L.erreur_pub_prefix + detail;
     message.style.display = "block";
     console.error("Pub récompensée non obtenue :", raison);
   }
@@ -1189,7 +1480,7 @@ document.getElementById("boutonCreer").addEventListener("click", () => {
 let donneesCV = donneesVides();
 let etapeActuelle = 1;
 const NB_ETAPES = 5;
-const NOMS_ETAPES = ["Informations personnelles", "Expérience", "Formation", "Compétences", "Objectif"];
+const NOMS_ETAPES = L.noms_etapes;
 
 function ouvrirFormulaire(idProfil) {
   idProfilEnEdition = idProfil;
@@ -1215,32 +1506,33 @@ function sauvegarderEtAllerAuxSections() {
 // Écran Gérer mes sections (par profil)
 // ============================================
 const sectionsBase = [
-  { id: "infos", nom: "Informations personnelles", obligatoire: true },
-  { id: "objectif", nom: "Objectif", obligatoire: true },
-  { id: "experience", nom: "Expérience professionnelle", obligatoire: true },
-  { id: "formation", nom: "Formation", obligatoire: true },
-  { id: "competences", nom: "Compétences", obligatoire: true }
+  { id: "infos", nom: L.noms_etapes[0], obligatoire: true },
+  { id: "objectif", nom: L.section_objectif, obligatoire: true },
+  { id: "experience", nom: L.section_experience_pro, obligatoire: true },
+  { id: "formation", nom: L.section_formation, obligatoire: true },
+  { id: "competences", nom: L.section_competences, obligatoire: true }
 ];
+const NSO = L.noms_sections_optionnelles;
 const sectionsOptionnellesDisponibles = [
-  { nom: "Titre d'emploi", type: "texte-court" },
-  { nom: "Langues", type: "liste", labelTitre: "Langue", labelSousTitre: "Niveau" },
-  { nom: "Projets", type: "liste", labelTitre: "Nom du projet", labelSousTitre: "Description" },
-  { nom: "Intérêts", type: "tags" },
-  { nom: "Réalisations et récompenses", type: "liste", labelTitre: "Réalisation", labelSousTitre: "Contexte / date" },
-  { nom: "Activités", type: "tags" },
-  { nom: "Publication", type: "liste", labelTitre: "Titre de la publication", labelSousTitre: "Où / quand" },
-  { nom: "Information additionnelle", type: "texte-long" },
-  { nom: "Signature", type: "texte-court" },
-  { nom: "Déclaration", type: "texte-suggestions", suggestions: [
+  { nom: NSO[0], type: "texte-court" },
+  { nom: NSO[1], type: "liste", labelTitre: "Langue", labelSousTitre: "Niveau" },
+  { nom: NSO[2], type: "liste", labelTitre: "Nom du projet", labelSousTitre: "Description" },
+  { nom: NSO[3], type: "tags" },
+  { nom: NSO[4], type: "liste", labelTitre: "Réalisation", labelSousTitre: "Contexte / date" },
+  { nom: NSO[5], type: "tags" },
+  { nom: NSO[6], type: "liste", labelTitre: "Titre de la publication", labelSousTitre: "Où / quand" },
+  { nom: NSO[7], type: "texte-long" },
+  { nom: NSO[8], type: "texte-court" },
+  { nom: NSO[9], type: "texte-suggestions", suggestions: [
       { etiquette: "Standard", texte: "Je déclare sur l'honneur que les informations fournies dans ce document sont exactes et sincères." }
   ]},
-  { nom: "Lettre de motivation", type: "texte-suggestions", suggestions: [
+  { nom: NSO[10], type: "texte-suggestions", suggestions: [
       { etiquette: "Candidature spontanée", texte: "Je me permets de vous adresser ma candidature spontanée, convaincu(e) que mon profil pourrait répondre à vos besoins. Motivé(e) et sérieux(se), je serais ravi(e) de vous rencontrer pour échanger davantage." },
       { etiquette: "Réponse à une offre", texte: "C'est avec un vif intérêt que je vous adresse ma candidature pour ce poste. Mon profil et mes compétences correspondent, je le pense, aux exigences de cette offre, et je serais heureux(se) de vous convaincre lors d'un entretien." },
       { etiquette: "Premier emploi", texte: "Jeune diplômé(e) motivé(e), je souhaite mettre mon dynamisme et mon envie d'apprendre au service de votre structure. Je reste disponible pour tout entretien complémentaire." }
   ]},
-  { nom: "Logiciel", type: "tags" },
-  { nom: "Références", type: "liste", labelTitre: "Nom", labelSousTitre: "Poste / Entreprise", avecDescription: true, labelDescription: "Contact" }
+  { nom: NSO[11], type: "tags" },
+  { nom: NSO[12], type: "liste", labelTitre: "Nom", labelSousTitre: "Poste / Entreprise", avecDescription: true, labelDescription: "Contact" }
 ];
 
 let idGlissementSection = null;
@@ -1292,7 +1584,7 @@ function afficherSectionsActives() {
         <div style="display:flex;align-items:center;gap:10px;width:100%;">
           <span class="poignee" data-poignee="${id}">⠿</span>
           <span class="nom-section" style="flex:1;">${s.nom}</span>
-          ${s.obligatoire ? `<span class="etiquette-obligatoire">Base</span>` : `<button type="button" class="bouton-supprimer" onclick="retirerSectionDuProfil('${id}')">Retirer</button>`}
+          ${s.obligatoire ? `<span class="etiquette-obligatoire">${L.etiquette_base||"Base"}</span>` : `<button type="button" class="bouton-supprimer" onclick="retirerSectionDuProfil('${id}')">${L.action_retirer||"Retirer"}</button>`}
         </div>
         ${!s.obligatoire ? `<div style="width:100%;margin-top:10px;" id="contenu-${id}">${genererFormulaireContenu(s)}</div>` : ""}
       </div>`;
@@ -1481,7 +1773,7 @@ document.getElementById("boutonContinuerVersModeles").addEventListener("click", 
 });
 
 function majProgression() {
-  document.getElementById("texteEtape").textContent = `Étape ${etapeActuelle} sur ${NB_ETAPES}`;
+  document.getElementById("texteEtape").textContent = L.etape_format.replace("{n}", etapeActuelle).replace("{t}", NB_ETAPES);
   document.getElementById("texteNomEtape").textContent = NOMS_ETAPES[etapeActuelle - 1];
   document.getElementById("barreRemplie").style.width = (etapeActuelle / NB_ETAPES * 100) + "%";
 }
@@ -1514,7 +1806,7 @@ function afficherEtape() {
   }
 
   else if (etapeActuelle === 2) {
-    conteneur.innerHTML = `<h2>Expérience professionnelle</h2><p class="rappel-facultatif">Facultatif.</p><div id="listeExperiences"></div><button type="button" class="bouton-ajouter" id="boutonAjouterExp">+ Ajouter une expérience</button>`;
+    conteneur.innerHTML = `<h2>${L.section_experience_pro}</h2><p class="rappel-facultatif">Facultatif.</p><div id="listeExperiences"></div><button type="button" class="bouton-ajouter" id="boutonAjouterExp">+ Ajouter une expérience</button>`;
     afficherExperiences();
     document.getElementById("boutonAjouterExp").addEventListener("click", () => {
       donneesCV.experiences.push({ id: Date.now(), poste: "", entreprise: "", periode: "", description: "" });
@@ -1523,7 +1815,7 @@ function afficherEtape() {
   }
 
   else if (etapeActuelle === 3) {
-    conteneur.innerHTML = `<h2>Formation</h2><p class="rappel-facultatif">Facultatif.</p><div id="listeFormations"></div><button type="button" class="bouton-ajouter" id="boutonAjouterForm">+ Ajouter une formation</button>`;
+    conteneur.innerHTML = `<h2>${L.section_formation}</h2><p class="rappel-facultatif">Facultatif.</p><div id="listeFormations"></div><button type="button" class="bouton-ajouter" id="boutonAjouterForm">+ Ajouter une formation</button>`;
     afficherFormations();
     document.getElementById("boutonAjouterForm").addEventListener("click", () => {
       donneesCV.formations.push({ id: Date.now(), diplome: "", etablissement: "", periode: "" });
@@ -1532,14 +1824,14 @@ function afficherEtape() {
   }
 
   else if (etapeActuelle === 4) {
-    conteneur.innerHTML = `<h2>Compétences</h2><p class="rappel-facultatif">Tape une compétence puis Entrée ou "+".</p><div class="zone-saisie"><input type="text" id="champCompetence" placeholder="Ex : HTML, gestion de projet..."><button type="button" class="bouton-plus" id="boutonPlusCompetence">+</button></div><div class="tags-formulaire" id="tagsFormulaire"></div>`;
+    conteneur.innerHTML = `<h2>${L.section_competences}</h2><p class="rappel-facultatif">Tape une compétence puis Entrée ou "+".</p><div class="zone-saisie"><input type="text" id="champCompetence" placeholder="Ex : HTML, gestion de projet..."><button type="button" class="bouton-plus" id="boutonPlusCompetence">+</button></div><div class="tags-formulaire" id="tagsFormulaire"></div>`;
     afficherTagsCompetences();
     document.getElementById("boutonPlusCompetence").addEventListener("click", ajouterCompetence);
     document.getElementById("champCompetence").addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); ajouterCompetence(); } });
   }
 
   else if (etapeActuelle === 5) {
-    conteneur.innerHTML = `<h2>Objectif</h2><p class="rappel-facultatif">Choisis un exemple pour démarrer, puis modifie-le si tu veux.</p><p class="label-suggestions">Exemples suggérés :</p><div class="liste-suggestions" id="listeSuggestions"></div><div class="champ"><label>Ton texte</label><textarea id="champObjectif" placeholder="Écris ton propre objectif...">${donneesCV.objectif}</textarea></div>`;
+    conteneur.innerHTML = `<h2>${L.section_objectif}</h2><p class="rappel-facultatif">Choisis un exemple pour démarrer, puis modifie-le si tu veux.</p><p class="label-suggestions">Exemples suggérés :</p><div class="liste-suggestions" id="listeSuggestions"></div><div class="champ"><label>Ton texte</label><textarea id="champObjectif" placeholder="Écris ton propre objectif...">${donneesCV.objectif}</textarea></div>`;
     document.getElementById("listeSuggestions").innerHTML = suggestionsObjectif.map((s, i) => `<button type="button" class="suggestion" onclick="choisirSuggestion(${i})"><span class="etiquette">${s.etiquette}</span>${s.texte}</button>`).join("");
     document.getElementById("champObjectif").addEventListener("input", e => { donneesCV.objectif = e.target.value; actualiserApercu(); });
   }
@@ -1547,8 +1839,8 @@ function afficherEtape() {
   const nav = document.createElement("div");
   nav.className = "navigation";
   nav.innerHTML = `
-    ${etapeActuelle > 1 ? `<button type="button" class="bouton-precedent" id="boutonPrecedent">← Précédent</button>` : `<button type="button" class="bouton-precedent" id="boutonAnnuler">Annuler</button>`}
-    <button type="button" class="bouton-suivant" id="boutonSuivant">${etapeActuelle < NB_ETAPES ? "Suivant →" : "Suivant : Sections →"}</button>
+    ${etapeActuelle > 1 ? `<button type="button" class="bouton-precedent" id="boutonPrecedent">${L.bouton_precedent}</button>` : `<button type="button" class="bouton-precedent" id="boutonAnnuler">${L.reglages_annuler}</button>`}
+    <button type="button" class="bouton-suivant" id="boutonSuivant">${etapeActuelle < NB_ETAPES ? L.bouton_suivant : L.bouton_suivant_sections}</button>
   `;
   conteneur.appendChild(nav);
   if (etapeActuelle > 1) document.getElementById("boutonPrecedent").addEventListener("click", allerPrecedent);
@@ -1644,13 +1936,142 @@ function actualiserApercu() {
     <div class="banniere"><div class="photo" style="${d.photo?`background-image:url('${d.photo}');background-size:cover;background-position:center;`:""}"></div><div class="identite"><h1>${d.nom||"Ton nom"}</h1><p class="titre-poste">${d.poste||"Poste recherché"}</p></div></div>
     <div class="contact"><span>${d.telephone||"Téléphone"}</span><span>${d.email||"Email"}</span><span>${d.ville||"Ville"}</span></div>
     <div class="corps">
-      ${d.objectif?`<section class="bloc"><h2 class="titre-section">Objectif</h2><p class="objectif-texte">${d.objectif}</p></section>`:""}
-      ${d.experiences.length?`<section class="bloc"><h2 class="titre-section">Expérience professionnelle</h2>${exp}</section>`:""}
-      ${d.formations.length?`<section class="bloc"><h2 class="titre-section">Formation</h2>${form}</section>`:""}
-      ${d.competences.length?`<section class="bloc"><h2 class="titre-section">Compétences</h2><div class="competences">${comp}</div></section>`:""}
+      ${d.objectif?`<section class="bloc"><h2 class="titre-section">${L.section_objectif}</h2><p class="objectif-texte">${d.objectif}</p></section>`:""}
+      ${d.experiences.length?`<section class="bloc"><h2 class="titre-section">${L.section_experience_pro}</h2>${exp}</section>`:""}
+      ${d.formations.length?`<section class="bloc"><h2 class="titre-section">${L.section_formation}</h2>${form}</section>`:""}
+      ${d.competences.length?`<section class="bloc"><h2 class="titre-section">${L.section_competences}</h2><div class="competences">${comp}</div></section>`:""}
     </div>`;
 }
 
+// ============================================
+// Application des traductions aux écrans statiques
+// ============================================
+function appliquerTraductionsStatiques() {
+  const definir = (id, texte) => { const el = document.getElementById(id); if (el) el.textContent = texte; };
+  definir("titreProfils", L.profils_titre);
+  definir("sousTitreProfils", L.profils_sous_titre);
+  definir("labelPartagerApp", L.action_partager);
+  definir("labelOuvrirReglages", L.action_reglages);
+  definir("titreReglages", L.reglages_titre);
+  definir("labelModeSombre", L.reglages_mode_sombre);
+  definir("labelLangue", L.reglages_langue);
+  definir("labelTaillePapier", L.reglages_taille_papier);
+  definir("labelContacter", L.reglages_contacter);
+  definir("labelPolitique", L.reglages_politique);
+  definir("labelConditions", L.reglages_conditions);
+  definir("labelVider", L.reglages_vider);
+  definir("texteVersion", `NextCV — ${L.reglages_version} 1.0.0`);
+  definir("titrePolitique", L.politique_titre);
+  definir("titreConditions", L.conditions_titre);
+  definir("titreGererSections", L.gerer_sections_titre);
+  definir("sousTitreGererSections", L.gerer_sections_sous_titre);
+  definir("titreSectionsActives", L.sections_actives_titre);
+  definir("texteGlisserDeposer", L.glisser_deposer_note);
+  definir("titreAjouterSections", L.ajouter_sections_titre);
+  definir("titreCreerSection", L.creer_section_titre);
+  definir("boutonCreerSection", "+ " + L.bouton_creer_section.replace(/^\+ /, ""));
+  definir("boutonContinuerVersModeles", L.bouton_terminer);
+  definir("titreModeles", L.modeles_titre);
+  definir("labelCouleur", L.couleur_label);
+  definir("noteCouleur", L.couleur_note);
+  definir("boutonTelecharger", L.bouton_telecharger);
+  definir("labelCreerProfil", L.bouton_creer_profil);
+  const champSection = document.getElementById("champNouvelleSection");
+  if (champSection) champSection.placeholder = L.creer_section_placeholder;
+  const politiqueTexte = document.getElementById("textePolitique");
+  if (politiqueTexte) politiqueTexte.innerHTML = L.politique_texte;
+  const conditionsTexte = document.getElementById("texteConditions");
+  if (conditionsTexte) conditionsTexte.innerHTML = L.conditions_texte;
+  const retourReglages = document.getElementById("boutonRetourDepuisReglages");
+  if (retourReglages) retourReglages.textContent = L.retour_profils;
+  const retourGalerie = document.getElementById("boutonRetourDepuisGalerie");
+  if (retourGalerie) retourGalerie.textContent = L.retour_profils;
+  const retourModeles = document.getElementById("boutonRetourVersGalerie");
+  if (retourModeles) retourModeles.textContent = L.retour_modeles;
+  const retourPolitique = document.getElementById("boutonRetourDepuisPolitique");
+  if (retourPolitique) retourPolitique.textContent = "← " + L.reglages_titre;
+  const retourConditions = document.getElementById("boutonRetourDepuisConditions");
+  if (retourConditions) retourConditions.textContent = "← " + L.reglages_titre;
+  const langueNoms = { fr: "Français", en: "English", es: "Español", zh: "中文" };
+  definir("langueActuelleAffichee", langueNoms[codeLangue] || codeLangue);
+  const papierActuel = localStorage.getItem("nextcv_taille_papier") || "a4";
+  definir("papierActuelAffiche", papierActuel === "lettre" ? L.papier_lettre : L.papier_a4);
+}
+
+// ============================================
+// Mode sombre
+// ============================================
+function appliquerModeSombre(actif) {
+  document.documentElement.setAttribute("data-theme", actif ? "sombre" : "clair");
+}
+const modeSombreActif = localStorage.getItem("nextcv_mode_sombre") === "oui";
+appliquerModeSombre(modeSombreActif);
+const caseModeSombre = document.getElementById("caseModeSombre");
+if (caseModeSombre) {
+  caseModeSombre.checked = modeSombreActif;
+  caseModeSombre.addEventListener("change", (e) => {
+    localStorage.setItem("nextcv_mode_sombre", e.target.checked ? "oui" : "non");
+    appliquerModeSombre(e.target.checked);
+  });
+}
+
+// ============================================
+// Sélecteur de langue (inline, pas de popup native)
+// ============================================
+document.getElementById("ligneLangue").addEventListener("click", () => {
+  const zone = document.getElementById("zoneSelecteurLangue");
+  if (zone.innerHTML) { zone.innerHTML = ""; return; }
+  const langues = [["fr","Français"],["en","English"],["es","Español"],["zh","中文"]];
+  zone.innerHTML = `<div class="ligne-actions-accueil" style="margin:0 0 14px;">${langues.map(([code,nom]) =>
+    `<button type="button" class="bouton-action-accueil" style="${code===codeLangue?'box-shadow:0 0 0 2px var(--accent-app) inset;':''}" onclick="changerLangue('${code}')"><span>${nom}</span></button>`
+  ).join("")}</div>`;
+});
+
+// ============================================
+// Taille de papier (inline)
+// ============================================
+document.getElementById("ligneTaillePapier").addEventListener("click", () => {
+  const zone = document.getElementById("zoneSelecteurPapier");
+  if (zone.innerHTML) { zone.innerHTML = ""; return; }
+  const actuel = localStorage.getItem("nextcv_taille_papier") || "a4";
+  const options = [["a4", L.papier_a4], ["lettre", L.papier_lettre]];
+  zone.innerHTML = `<div class="ligne-actions-accueil" style="margin:0 0 14px;">${options.map(([code,nom]) =>
+    `<button type="button" class="bouton-action-accueil" style="${code===actuel?'box-shadow:0 0 0 2px var(--accent-app) inset;':''}" onclick="choisirTaillePapier('${code}')"><span>${nom}</span></button>`
+  ).join("")}</div>`;
+});
+function choisirTaillePapier(code) {
+  localStorage.setItem("nextcv_taille_papier", code);
+  document.getElementById("zoneSelecteurPapier").innerHTML = "";
+  document.getElementById("papierActuelAffiche").textContent = code === "lettre" ? L.papier_lettre : L.papier_a4;
+}
+
+// ============================================
+// Écrans Politique de confidentialité / Conditions d'utilisation
+// ============================================
+function masquerTousLesEcransDepuisReglages() {
+  document.getElementById("ecranReglages").classList.remove("visible");
+  document.getElementById("ecranPolitique").classList.remove("visible");
+  document.getElementById("ecranConditions").classList.remove("visible");
+}
+document.getElementById("lignePolitique").addEventListener("click", () => {
+  masquerTousLesEcransDepuisReglages();
+  document.getElementById("ecranPolitique").classList.add("visible");
+});
+document.getElementById("ligneConditions").addEventListener("click", () => {
+  masquerTousLesEcransDepuisReglages();
+  document.getElementById("ecranConditions").classList.add("visible");
+});
+document.getElementById("boutonRetourDepuisPolitique").addEventListener("click", () => {
+  masquerTousLesEcransDepuisReglages();
+  document.getElementById("ecranReglages").classList.add("visible");
+});
+document.getElementById("boutonRetourDepuisConditions").addEventListener("click", () => {
+  masquerTousLesEcransDepuisReglages();
+  document.getElementById("ecranReglages").classList.add("visible");
+});
+
+document.documentElement.lang = codeLangue;
+appliquerTraductionsStatiques();
 afficherEcranProfils();
 </script>
 

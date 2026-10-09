@@ -1,7 +1,7 @@
 {
-  "name": "cv-express",
+  "name": "nextcv",
   "version": "1.0.0",
-  "description": "CV Express - générateur de CV gratuit, Android",
+  "description": "NextCV - générateur de CV gratuit, Android",
   "scripts": {
     "sync": "npx cap sync android"
   },
