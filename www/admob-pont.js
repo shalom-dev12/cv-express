@@ -3,11 +3,7 @@
 // il ne s'active que dans l'application Android packagée.
 
 (function () {
-  // ⚠️ MODE TEST ACTIVÉ : identifiant de pub factice fourni par Google,
-  // qui fonctionne toujours. Sert uniquement à vérifier que l'intégration
-  // technique fonctionne, pendant que le vrai compte AdMob "chauffe".
-  // Une fois confirmé, remettre : "ca-app-pub-4323566518250268/3701681010"
-  const IDENTIFIANT_BLOC_RECOMPENSE = "ca-app-pub-3940256099942544/5224354917";
+  const IDENTIFIANT_BLOC_RECOMPENSE = "ca-app-pub-4323566518250268/3701681010";
 
   if (!window.Capacitor || !window.Capacitor.Plugins || !window.Capacitor.Plugins.AdMob) {
     // Pas dans l'app Android (ex: test dans Chrome) → on ne fait rien,
@@ -25,7 +21,7 @@
     try {
       await AdMob.initialize({
         requestTrackingAuthorization: true,
-        initializeForTesting: true // ⚠️ mode test — remettre à false avant publication finale
+        initializeForTesting: false
       });
       await chargerPub();
     } catch (erreur) {
