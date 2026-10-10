@@ -3,3 +3,5 @@ android/app/build/
 android/build/
 android/.gradle/
 *.log
+nextcv-release.keystore
+cle_encodee.txt

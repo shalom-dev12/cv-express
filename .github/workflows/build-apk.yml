@@ -32,8 +32,29 @@ jobs:
             npx cap add android
           fi
 
-      - name: Generer icone et ecran de demarrage
-        run: npx @capacitor/assets generate --android
+      - name: Generer les icones Android
+        run: |
+          RES=android/app/src/main/res
+          declare -A LEGACY=( [mdpi]=48 [hdpi]=72 [xhdpi]=96 [xxhdpi]=144 [xxxhdpi]=192 )
+          declare -A ADAPTIVE=( [mdpi]=108 [hdpi]=162 [xhdpi]=216 [xxhdpi]=324 [xxxhdpi]=432 )
+          for d in "${!LEGACY[@]}"; do
+            mkdir -p "$RES/mipmap-$d"
+            convert resources/icon.png -resize ${LEGACY[$d]}x${LEGACY[$d]} "$RES/mipmap-$d/ic_launcher.png"
+            convert resources/icon.png -resize ${LEGACY[$d]}x${LEGACY[$d]} "$RES/mipmap-$d/ic_launcher_round.png"
+          done
+          for d in "${!ADAPTIVE[@]}"; do
+            mkdir -p "$RES/mipmap-$d"
+            convert resources/icon-foreground.png -resize ${ADAPTIVE[$d]}x${ADAPTIVE[$d]} "$RES/mipmap-$d/ic_launcher_foreground.png"
+            convert resources/icon-background.png -resize ${ADAPTIVE[$d]}x${ADAPTIVE[$d]} "$RES/mipmap-$d/ic_launcher_background.png"
+          done
+          mkdir -p "$RES/mipmap-anydpi-v26"
+          cat > "$RES/mipmap-anydpi-v26/ic_launcher.xml" << 'XML'
+          <adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+              <background android:drawable="@mipmap/ic_launcher_background"/>
+              <foreground android:drawable="@mipmap/ic_launcher_foreground"/>
+          </adaptive-icon>
+          XML
+          cp "$RES/mipmap-anydpi-v26/ic_launcher.xml" "$RES/mipmap-anydpi-v26/ic_launcher_round.xml"
 
       - name: Synchroniser Capacitor
         run: npx cap sync android
@@ -49,8 +70,32 @@ jobs:
         working-directory: ./android
         run: chmod +x gradlew && ./gradlew assembleDebug
 
-      - name: Mettre l'APK à disposition en téléchargement
+      - name: Mettre l'APK (debug) à disposition en téléchargement
         uses: actions/upload-artifact@v4
         with:
-          name: cv-express-apk
+          name: nextcv-apk
           path: android/app/build/outputs/apk/debug/app-debug.apk
+
+      - name: Décoder la clé de signature
+        run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > android/nextcv-release.keystore
+
+      - name: Construire la version signée (AAB + APK release)
+        working-directory: ./android
+        run: |
+          ./gradlew bundleRelease assembleRelease \
+            -Pandroid.injected.signing.store.file=nextcv-release.keystore \
+            -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} \
+            -Pandroid.injected.signing.key.alias=${{ secrets.KEY_ALIAS }} \
+            -Pandroid.injected.signing.key.password=${{ secrets.KEY_PASSWORD }}
+
+      - name: Mettre l'AAB signé à disposition (pour le Play Store)
+        uses: actions/upload-artifact@v4
+        with:
+          name: nextcv-release-aab
+          path: android/app/build/outputs/bundle/release/app-release.aab
+
+      - name: Mettre l'APK signé à disposition (pour tester sur ton téléphone)
+        uses: actions/upload-artifact@v4
+        with:
+          name: nextcv-release-apk
+          path: android/app/build/outputs/apk/release/app-release.apk
