@@ -88,13 +88,13 @@ jobs:
           path: android/app/build/outputs/apk/debug/app-debug.apk
 
       - name: Décoder la clé de signature
-        run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > android/nextcv-release.keystore
+        run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > android/app/nextcv-release.keystore
 
       - name: Construire la version signée (AAB + APK release)
         working-directory: ./android
         run: |
           ./gradlew bundleRelease assembleRelease \
-            -Pandroid.injected.signing.store.file=nextcv-release.keystore \
+            -Pandroid.injected.signing.store.file=app/nextcv-release.keystore \
             -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} \
             -Pandroid.injected.signing.key.alias=${{ secrets.KEY_ALIAS }} \
             -Pandroid.injected.signing.key.password=${{ secrets.KEY_PASSWORD }}
