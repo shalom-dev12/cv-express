@@ -1312,7 +1312,7 @@ document.getElementById("boutonTelecharger").addEventListener("click", () => {
       const resultatEcriture = await Filesystem.writeFile({
         path: nomFichier,
         data: base64Data,
-        directory: "DOCUMENTS",
+        directory: "CACHE",
         recursive: true
       });
 
