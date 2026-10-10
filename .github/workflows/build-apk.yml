@@ -32,20 +32,31 @@ jobs:
             npx cap add android
           fi
 
+      - name: Verifier/installer ImageMagick
+        run: |
+          if ! command -v magick >/dev/null 2>&1 && ! command -v convert >/dev/null 2>&1; then
+            sudo apt-get update && sudo apt-get install -y imagemagick
+          fi
+
       - name: Generer les icones Android
         run: |
+          if command -v magick >/dev/null 2>&1; then
+            REDIM="magick"
+          else
+            REDIM="convert"
+          fi
           RES=android/app/src/main/res
           declare -A LEGACY=( [mdpi]=48 [hdpi]=72 [xhdpi]=96 [xxhdpi]=144 [xxxhdpi]=192 )
           declare -A ADAPTIVE=( [mdpi]=108 [hdpi]=162 [xhdpi]=216 [xxhdpi]=324 [xxxhdpi]=432 )
           for d in "${!LEGACY[@]}"; do
             mkdir -p "$RES/mipmap-$d"
-            convert resources/icon.png -resize ${LEGACY[$d]}x${LEGACY[$d]} "$RES/mipmap-$d/ic_launcher.png"
-            convert resources/icon.png -resize ${LEGACY[$d]}x${LEGACY[$d]} "$RES/mipmap-$d/ic_launcher_round.png"
+            $REDIM resources/icon.png -resize ${LEGACY[$d]}x${LEGACY[$d]} "$RES/mipmap-$d/ic_launcher.png"
+            $REDIM resources/icon.png -resize ${LEGACY[$d]}x${LEGACY[$d]} "$RES/mipmap-$d/ic_launcher_round.png"
           done
           for d in "${!ADAPTIVE[@]}"; do
             mkdir -p "$RES/mipmap-$d"
-            convert resources/icon-foreground.png -resize ${ADAPTIVE[$d]}x${ADAPTIVE[$d]} "$RES/mipmap-$d/ic_launcher_foreground.png"
-            convert resources/icon-background.png -resize ${ADAPTIVE[$d]}x${ADAPTIVE[$d]} "$RES/mipmap-$d/ic_launcher_background.png"
+            $REDIM resources/icon-foreground.png -resize ${ADAPTIVE[$d]}x${ADAPTIVE[$d]} "$RES/mipmap-$d/ic_launcher_foreground.png"
+            $REDIM resources/icon-background.png -resize ${ADAPTIVE[$d]}x${ADAPTIVE[$d]} "$RES/mipmap-$d/ic_launcher_background.png"
           done
           mkdir -p "$RES/mipmap-anydpi-v26"
           cat > "$RES/mipmap-anydpi-v26/ic_launcher.xml" << 'XML'
